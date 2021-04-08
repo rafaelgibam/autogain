@@ -11,19 +11,26 @@ import br.com.autogain.consumer.iqoption.utils.IQUtils;
 import br.com.autogain.consumer.iqoption.ws.request.BinaryBuyRequest;
 import br.com.autogain.model.Operation;
 import br.com.autogain.model.User;
+import br.com.autogain.service.IQOptionService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
-@RequestMapping("/autogains")
-public class MainController {
+@RequestMapping("/iqoptions")
+public class IQOptionController {
 
     private IQOption iqOption;
 
+    @Autowired
+    private IQOptionService iqOptionService;
+
     @PostMapping("/connects")
-    public ResponseEntity<String> connectIqOption(
+    public ResponseEntity<String> connect(
             @RequestBody User user
             ) {
         iqOption = new IQOption(user.getEmail(), user.getPassword());
@@ -39,13 +46,16 @@ public class MainController {
     public ResponseEntity<String> openOperation(
             @RequestBody Operation operation
             ) {
+        String resultMessage = iqOptionService.openOperation(iqOption, operation);
+        return ResponseEntity.ok(resultMessage);
+    }
 
-        iqOption.buyBinary(operation.getPrice(),
-                           BinaryBuyDirection.valueOf(operation.getDirection()),
-                           Actives.valueOf(operation.getActive()),
-                           operation.getExpiration());
-
-        return ResponseEntity.ok("Order open, Awaiting confirmation!");
+    @PostMapping("/operations/signals")
+    public ResponseEntity<String> openOperationSignals(
+            @RequestBody List<String> listSignals
+    ) {
+        iqOptionService.openOperation(iqOption, listSignals);
+        return ResponseEntity.ok("");
     }
 
 }

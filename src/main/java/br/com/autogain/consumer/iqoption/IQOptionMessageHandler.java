@@ -17,7 +17,6 @@ public class IQOptionMessageHandler implements MessageHandler {
 	private EventManager eventManager;
 	
 	public IQOptionMessageHandler(EventManager eventManager) {
-		logger.info("[WS] setting event manager");
 		this.eventManager = eventManager;
 	}
 
