@@ -1,4 +1,4 @@
-package br.com.autogain.consumer.iqoption.ws.response;
+package br.com.autogain.model;
 
 import br.com.autogain.consumer.iqoption.enums.CandleDirection;
 

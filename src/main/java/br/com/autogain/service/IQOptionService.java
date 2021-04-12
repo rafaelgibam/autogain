@@ -6,17 +6,17 @@ import br.com.autogain.consumer.iqoption.enums.BinaryBuyDirection;
 import br.com.autogain.consumer.iqoption.enums.TimeFrame;
 import br.com.autogain.consumer.iqoption.event.EventListener;
 import br.com.autogain.consumer.iqoption.event.Events;
-import br.com.autogain.consumer.iqoption.service.BaseService;
 import br.com.autogain.converter.OperationConverter;
 import br.com.autogain.dto.OperationDTO;
+import br.com.autogain.model.EventMessage;
 import br.com.autogain.model.Operation;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,6 +25,8 @@ public class IQOptionService implements EventListener {
     private String message;
     @Autowired
     private OperationConverter converter;
+    @Autowired
+    private EventMessageService eventMessageService;
 
     public String openOperation(IQOption iqOption, Operation operation) {
         iqOption.buyBinary(operation.getPrice(),
@@ -40,17 +42,53 @@ public class IQOptionService implements EventListener {
 
         listSignals.stream().forEach(ls -> {
             OperationDTO operationDTO = converter.convertSignalToOperation(ls);
-            while (!operationDTO.getEntryTime().equals(LocalDate.now())) {
-                log.info("[API] - Awaiting time signal to open!");
-                if(operationDTO.getEntryTime().equals(LocalDate.now())) {
+            DateTime entryTimeWithDelay = operationDTO.getEntryTime().minusSeconds(3);
+            String entryTimeWithDelayFormat = entryTimeWithDelay.toString("mm:ss");
+
+            while (true) {
+                log.info("[API] - Awaiting signal to open operation: " + entryTimeWithDelayFormat +
+                        " - Minutes: " +  new DateTime().minusSeconds(1).toString("mm:ss"));
+
+                if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("mm:ss"))) {
                     log.info("[API] - Opening operation active: ".concat(operationDTO.getActive())
-                            .concat("Timeframe: ").concat(TimeFrame.get(operationDTO.getExpiration()).toString()));
+                            .concat(" - Timeframe: ").concat(TimeFrame.get(operationDTO.getExpiration()).toString()));
                     openOperationWS(iqOption, converter.convertToOperation(operationDTO));
+                    break;
                 }
             }
         });
 
         return this.message;
+    }
+
+    private void openAutoOperation(IQOption iqOption, Operation operation) {
+        EventMessage eventMessage = eventMessageService.findAll(Sort.by(Sort.Direction.ASC, "open_time_millisecond"))
+                            .stream().findFirst().get();
+        if(eventMessage.getResult().equals("loose") && eventMessage.getDirection().equals("call")) {
+            operation.setDirection("put");
+            openOperation(iqOption, operation);
+        }
+        if(eventMessage.getResult().equals("win") && eventMessage.getDirection().equals("call")) {
+            operation.setDirection("call");
+            openOperation(iqOption, operation);
+        }
+        if(eventMessage.getResult().equals("equal") && eventMessage.getDirection().equals("call")) {
+            operation.setDirection("call");
+            openOperation(iqOption, operation);
+        }
+
+        if(eventMessage.getResult().equals("loose") && eventMessage.getDirection().equals("put")) {
+            operation.setDirection("call");
+            openOperation(iqOption, operation);
+        }
+        if(eventMessage.getResult().equals("win") && eventMessage.getDirection().equals("put")) {
+            operation.setDirection("put");
+            openOperation(iqOption, operation);
+        }
+        if(eventMessage.getResult().equals("equal") && eventMessage.getDirection().equals("put")) {
+            operation.setDirection("put");
+            openOperation(iqOption, operation);
+        }
     }
 
 

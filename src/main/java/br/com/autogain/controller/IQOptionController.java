@@ -58,4 +58,12 @@ public class IQOptionController {
         return ResponseEntity.ok("");
     }
 
+    @GetMapping("/autos")
+    public ResponseEntity<String> autoOperation(
+            @RequestBody Operation operation
+    ) {
+        iqOptionService.openOperation(iqOption, operation);
+        return ResponseEntity.ok("");
+    }
+
 }

@@ -3,8 +3,10 @@ package br.com.autogain.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+import org.joda.time.DateTime;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 
 @Data
@@ -19,5 +21,5 @@ public class OperationDTO {
     @JsonProperty("active")
     private String active;
     @JsonProperty("entry_time")
-    private LocalDate entryTime;
+    private DateTime entryTime;
 }

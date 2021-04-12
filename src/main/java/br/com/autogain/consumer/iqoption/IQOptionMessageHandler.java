@@ -2,34 +2,26 @@ package br.com.autogain.consumer.iqoption;
 
 import br.com.autogain.consumer.iqoption.IQOptionWS.MessageHandler;
 import br.com.autogain.consumer.iqoption.event.EventManager;
-import br.com.autogain.consumer.iqoption.ws.message.Message;
+import br.com.autogain.converter.MessageConverter;
+import br.com.autogain.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class IQOptionMessageHandler implements MessageHandler {
 	
 	private final Logger logger = LoggerFactory.getLogger(IQOptionMessageHandler.class);
 	
 	private EventManager eventManager;
-	
+
+	private MessageConverter messageConverter;
+
 	public IQOptionMessageHandler(EventManager eventManager) {
+		this.messageConverter = new MessageConverter();
 		this.eventManager = eventManager;
 	}
 
 	@Override
-	public void handleMessage(String message) {	
-		try {
-			Message msg = new ObjectMapper().readValue(message, Message.class);
-			this.eventManager.notif(msg.getName(), message);
-		} catch (JsonMappingException e) {
-			logger.error(e.getMessage());
-		} catch (JsonProcessingException e) {
-			logger.error(e.getMessage());
-		}
+	public void handleMessage(String message) {
+		this.eventManager.notif(message);
 	}
-	
 }

@@ -19,7 +19,7 @@ import br.com.autogain.consumer.iqoption.ws.request.BaseRequestMessage;
 import br.com.autogain.consumer.iqoption.ws.request.BinaryBuyRequest;
 import br.com.autogain.consumer.iqoption.ws.request.CandleBody;
 import br.com.autogain.consumer.iqoption.ws.request.Msg;
-import br.com.autogain.consumer.iqoption.ws.response.Balance;
+import br.com.autogain.model.Balance;
 import br.com.autogain.consumer.iqoption.ws.response.ProfileRootMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,7 +150,7 @@ public class IQOption implements EventListener {
 		Long id = profile.getMsg().getBalanceId();
 		Balance balance = profile.getMsg().getBalances()
 			.stream()
-			.filter(b -> b.getId() == id)
+			.filter(b -> b.getId().equals(id))
 			.findFirst().get();
 
 		logger.info("[BALANCE] Current balance is: " + BalanceType.get(balance.getType()));

@@ -2,6 +2,7 @@ package br.com.autogain.consumer.iqoption.ws.response;
 
 import java.util.List;
 
+import br.com.autogain.model.Candle;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
