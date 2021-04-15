@@ -19,7 +19,7 @@ import br.com.autogain.consumer.iqoption.ws.request.BaseRequestMessage;
 import br.com.autogain.consumer.iqoption.ws.request.BinaryBuyRequest;
 import br.com.autogain.consumer.iqoption.ws.request.CandleBody;
 import br.com.autogain.consumer.iqoption.ws.request.Msg;
-import br.com.autogain.model.Balance;
+import br.com.autogain.domain.Balance;
 import br.com.autogain.consumer.iqoption.ws.response.ProfileRootMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

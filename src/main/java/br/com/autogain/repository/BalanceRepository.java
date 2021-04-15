@@ -1,7 +1,6 @@
 package br.com.autogain.repository;
 
-import br.com.autogain.model.Balance;
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.autogain.domain.Balance;
 import org.springframework.stereotype.Repository;
 
 @Repository

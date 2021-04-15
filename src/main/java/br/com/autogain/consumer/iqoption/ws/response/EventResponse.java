@@ -1,6 +1,6 @@
 package br.com.autogain.consumer.iqoption.ws.response;
 
-import br.com.autogain.model.Message;
+import br.com.autogain.domain.Message;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

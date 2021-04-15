@@ -1,4 +1,4 @@
-package br.com.autogain.model;
+package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Data
 @Entity(name = "balance")

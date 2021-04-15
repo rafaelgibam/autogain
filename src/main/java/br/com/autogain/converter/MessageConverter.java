@@ -1,8 +1,7 @@
 package br.com.autogain.converter;
 
-import br.com.autogain.model.EventMessage;
-import br.com.autogain.model.Message;
-import br.com.autogain.consumer.iqoption.ws.response.OperationResponse;
+import br.com.autogain.domain.EventMessage;
+import br.com.autogain.domain.Message;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;

@@ -1,6 +1,6 @@
 package br.com.autogain.consumer.iqoption.factory;
 
-import br.com.autogain.model.CandleRootMessage;
+import br.com.autogain.domain.CandleRootMessage;
 import br.com.autogain.consumer.iqoption.ws.response.ProfileRootMessage;
 import br.com.autogain.consumer.iqoption.event.Events;
 

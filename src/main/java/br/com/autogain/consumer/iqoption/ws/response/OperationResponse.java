@@ -1,6 +1,6 @@
 package br.com.autogain.consumer.iqoption.ws.response;
 
-import br.com.autogain.model.Balance;
+import br.com.autogain.domain.Balance;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joda.time.DateTime;

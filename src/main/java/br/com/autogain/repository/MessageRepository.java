@@ -1,7 +1,6 @@
 package br.com.autogain.repository;
 
-import br.com.autogain.model.Message;
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.autogain.domain.Message;
 import org.springframework.stereotype.Repository;
 
 @Repository

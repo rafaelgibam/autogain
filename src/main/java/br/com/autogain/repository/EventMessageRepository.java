@@ -1,7 +1,6 @@
 package br.com.autogain.repository;
 
-import br.com.autogain.model.EventMessage;
-import org.springframework.data.jpa.repository.JpaRepository;
+import br.com.autogain.domain.EventMessage;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;

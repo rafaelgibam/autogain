@@ -1,10 +1,9 @@
-package br.com.autogain.model;
+package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 
 @Data
 @Entity(name = "message")

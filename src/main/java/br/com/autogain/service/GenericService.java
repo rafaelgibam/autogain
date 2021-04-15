@@ -1,14 +1,12 @@
 package br.com.autogain.service;
 
-import br.com.autogain.model.BaseEntity;
+import br.com.autogain.domain.BaseEntity;
 import br.com.autogain.repository.GenericRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service

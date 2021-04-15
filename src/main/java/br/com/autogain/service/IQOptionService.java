@@ -7,10 +7,12 @@ import br.com.autogain.consumer.iqoption.enums.TimeFrame;
 import br.com.autogain.consumer.iqoption.event.EventListener;
 import br.com.autogain.consumer.iqoption.event.Events;
 import br.com.autogain.converter.OperationConverter;
+import br.com.autogain.domain.EventMessage;
+import br.com.autogain.domain.Operation;
+import br.com.autogain.domain.Signal;
 import br.com.autogain.dto.OperationDTO;
-import br.com.autogain.model.EventMessage;
-import br.com.autogain.model.Operation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Time;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -29,7 +31,7 @@ public class IQOptionService implements EventListener {
     private EventMessageService eventMessageService;
 
     public String openOperation(IQOption iqOption, Operation operation) {
-        iqOption.buyBinary(operation.getPrice(),
+        iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
                 operation.getExpiration());
@@ -37,23 +39,27 @@ public class IQOptionService implements EventListener {
     }
 
 
-    public String openOperation(IQOption iqOption, List<String> listSignals) {
+    public String openOperation(IQOption iqOption, Signal signal) {
         // "M5;AUDCAD;00:30:00;PUT"
 
-        listSignals.stream().forEach(ls -> {
-            OperationDTO operationDTO = converter.convertSignalToOperation(ls);
-            DateTime entryTimeWithDelay = operationDTO.getEntryTime().minusSeconds(3);
-            String entryTimeWithDelayFormat = entryTimeWithDelay.toString("mm:ss");
+        signal.getOperations().stream().forEach(operation -> {
+            DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
+            String entryTimeWithDelayFormat = entryTimeWithDelay.toString("hh:mm:ss");
 
             while (true) {
                 log.info("[API] - Awaiting signal to open operation: " + entryTimeWithDelayFormat +
-                        " - Minutes: " +  new DateTime().minusSeconds(1).toString("mm:ss"));
+                        " - Minutes: " +  new DateTime().minusSeconds(1).toString("hh:mm:ss"));
 
-                if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("mm:ss"))) {
-                    log.info("[API] - Opening operation active: ".concat(operationDTO.getActive())
-                            .concat(" - Timeframe: ").concat(TimeFrame.get(operationDTO.getExpiration()).toString()));
-                    openOperationWS(iqOption, converter.convertToOperation(operationDTO));
+                if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("hh:mm:ss"))) {
+                    log.info("[API] - Opening operation active: ".concat(operation.getActive())
+                            .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
+                    openOperationWS(iqOption, operation);
                     break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -93,7 +99,7 @@ public class IQOptionService implements EventListener {
 
 
     private void openOperationWS(IQOption iqOption, Operation operation) {
-        iqOption.buyBinary(operation.getPrice(),
+        iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
                 operation.getExpiration());

@@ -1,4 +1,4 @@
-package br.com.autogain.model;
+package br.com.autogain.domain;
 
 import br.com.autogain.consumer.iqoption.ws.response.CandlesResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

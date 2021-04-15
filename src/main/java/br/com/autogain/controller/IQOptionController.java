@@ -2,16 +2,12 @@ package br.com.autogain.controller;
 
 
 import br.com.autogain.consumer.iqoption.IQOption;
-import br.com.autogain.consumer.iqoption.enums.Actives;
-import br.com.autogain.consumer.iqoption.enums.BalanceType;
-import br.com.autogain.consumer.iqoption.enums.BinaryBuyDirection;
-import br.com.autogain.consumer.iqoption.event.Events;
-import br.com.autogain.consumer.iqoption.rest.request.LoginRequest;
-import br.com.autogain.consumer.iqoption.utils.IQUtils;
-import br.com.autogain.consumer.iqoption.ws.request.BinaryBuyRequest;
-import br.com.autogain.model.Operation;
-import br.com.autogain.model.User;
+import br.com.autogain.converter.OperationConverter;
+import br.com.autogain.domain.Operation;
+import br.com.autogain.domain.Signal;
+import br.com.autogain.domain.User;
 import br.com.autogain.service.IQOptionService;
+import br.com.autogain.service.SignalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +24,10 @@ public class IQOptionController {
 
     @Autowired
     private IQOptionService iqOptionService;
+    @Autowired
+    private SignalService signalService;
+    @Autowired
+    private OperationConverter operationConverter;
 
     @PostMapping("/connects")
     public ResponseEntity<String> connect(
@@ -51,10 +51,16 @@ public class IQOptionController {
     }
 
     @PostMapping("/operations/signals")
-    public ResponseEntity<String> openOperationSignals(
-            @RequestBody List<String> listSignals
+    public ResponseEntity<Signal> saveOperationSignals(
+            @RequestBody Signal signal
     ) {
-        iqOptionService.openOperation(iqOption, listSignals);
+        return ResponseEntity.ok(signalService.save(signal));
+    }
+
+    @GetMapping("/operations/signals/{id_signal}")
+    public ResponseEntity<String> openOperationSignals(@PathVariable("id_signal") Long id) {
+        Signal signal = signalService.getOne(id);
+        iqOptionService.openOperation(iqOption, signal);
         return ResponseEntity.ok("");
     }
 

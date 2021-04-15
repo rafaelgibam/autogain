@@ -2,7 +2,7 @@ package br.com.autogain.consumer.iqoption.ws.response;
 
 import java.util.List;
 
-import br.com.autogain.model.Balance;
+import br.com.autogain.domain.Balance;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
