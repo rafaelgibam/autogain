@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-@EntityScan(basePackages = {"br.com.autogain.model"})
-public abstract class BaseEntity {
+@EntityScan(basePackages = {"br.com.autogain.domain"})
+public  class BaseEntity {
     @Id
     @JsonProperty("id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
