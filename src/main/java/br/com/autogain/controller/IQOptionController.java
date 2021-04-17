@@ -6,6 +6,7 @@ import br.com.autogain.converter.OperationConverter;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.domain.User;
+import br.com.autogain.dto.SignalDTO;
 import br.com.autogain.service.IQOptionService;
 import br.com.autogain.service.SignalService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,15 @@ public class IQOptionController {
         }
         return ResponseEntity.ok("Connected... already!");
     }
+
+    @GetMapping("/operations/signals")
+    public ResponseEntity<List<Signal>> findAll(){
+
+        List<Signal> ListSignal = signalService.findAll();
+
+        return ResponseEntity.ok(ListSignal);
+    }
+
 
     @PostMapping("/operations")
     public ResponseEntity<String> openOperation(
