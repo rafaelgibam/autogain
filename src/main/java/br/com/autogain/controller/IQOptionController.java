@@ -6,8 +6,8 @@ import br.com.autogain.converter.OperationConverter;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.domain.User;
-import br.com.autogain.dto.SignalDTO;
 import br.com.autogain.service.IQOptionService;
+import br.com.autogain.service.OperationService;
 import br.com.autogain.service.SignalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -29,6 +30,8 @@ public class IQOptionController {
     private SignalService signalService;
     @Autowired
     private OperationConverter operationConverter;
+    @Autowired
+    private OperationService operationService;
 
     @PostMapping("/connects")
     public ResponseEntity<String> connect(
@@ -50,6 +53,22 @@ public class IQOptionController {
 
         return ResponseEntity.ok(ListSignal);
     }
+
+    @PostMapping("signals/{id}/operations")
+    public ResponseEntity <List<Operation>> operationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
+
+        Signal signal = signalService.getOne(id);
+
+        operations = operations.stream().map(operation -> {
+            operation.setSignal(signal);
+            return operation;
+        }).collect(Collectors.toList());
+
+        operations.stream().forEach(operation -> operationService.save(operation));
+
+     return ResponseEntity.ok(operations);
+    }
+
 
 
     @PostMapping("/operations")
