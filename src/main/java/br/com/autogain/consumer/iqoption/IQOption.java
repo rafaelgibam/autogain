@@ -23,11 +23,14 @@ import br.com.autogain.domain.Balance;
 import br.com.autogain.consumer.iqoption.ws.response.ProfileRootMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
+@Service
 public class IQOption implements EventListener {
 
 	private final Logger logger = LoggerFactory.getLogger(IQOption.class);
@@ -42,7 +45,8 @@ public class IQOption implements EventListener {
 
 	private String ssid = "";
 	private String cookies = "";
-	
+
+	@Autowired
 	private HttpHeaders headers;
 	
 	/**
@@ -54,6 +58,7 @@ public class IQOption implements EventListener {
 	/**
 	 * Event Manager
 	 */
+	@Autowired
 	private EventManager eventManager;
 	
 	/*
@@ -64,26 +69,19 @@ public class IQOption implements EventListener {
 	/*
 	 * Services
 	 */
+	@Autowired
 	private LoginBaseService loginService;
+	@Autowired
 	private ChangeBalanceBaseService changeBalanceBaseService;
-	
-	public IQOption(String email, String password) {
-		super();
-		this.email = email;
-		this.password = password;
-		this.headers = new HttpHeaders();
-		this.eventManager = new EventManager();
-		initServices();
-		initListeners();
-	}
-
-	private void initServices() {
-		this.loginService = new LoginBaseService();
-		this.changeBalanceBaseService = new ChangeBalanceBaseService();
-	}
 	
 	private void initListeners() {
 		this.eventManager.subscribe(Events.PROFILE, this);
+	}
+
+	public void initUser(String email, String password) {
+		initListeners();
+		this.email = email;
+		this.password = password;
 	}
 
 	/**

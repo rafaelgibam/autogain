@@ -20,8 +20,8 @@ import java.util.List;
 @RequestMapping("/iqoptions")
 public class IQOptionController {
 
+    @Autowired
     private IQOption iqOption;
-
     @Autowired
     private IQOptionService iqOptionService;
     @Autowired
@@ -33,7 +33,8 @@ public class IQOptionController {
     public ResponseEntity<String> connect(
             @RequestBody User user
             ) {
-        iqOption = new IQOption(user.getEmail(), user.getPassword());
+//        iqOption = new IQOption(user.getEmail(), user.getPassword());
+        iqOption.initUser(user.getEmail(), user.getPassword());
         iqOption.connect();
         iqOption.getAllBinaryData();
         if(iqOption.isAuthenticated()) {

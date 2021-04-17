@@ -4,7 +4,9 @@ import br.com.autogain.consumer.iqoption.rest.request.ChangeBalanceRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChangeBalanceBaseService extends BaseService {
 
 
