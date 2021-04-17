@@ -43,14 +43,6 @@ public class IQOptionController {
         return ResponseEntity.ok("Connected... already!");
     }
 
-    @PostMapping("/operations")
-    public ResponseEntity<String> openOperation(
-            @RequestBody Operation operation
-            ) {
-        String resultMessage = iqOptionService.openOperation(iqOption, operation);
-        return ResponseEntity.ok(resultMessage);
-    }
-
     @PostMapping("/operations/signals")
     public ResponseEntity<Signal> saveOperationSignals(
             @RequestBody Signal signal
@@ -62,14 +54,6 @@ public class IQOptionController {
     public ResponseEntity<String> openOperationSignals(@PathVariable("id_signal") Long id) {
         Signal signal = signalService.getOne(id);
         iqOptionService.openOperation(iqOption, signal);
-        return ResponseEntity.ok("");
-    }
-
-    @GetMapping("/autos")
-    public ResponseEntity<String> autoOperation(
-            @RequestBody Operation operation
-    ) {
-        iqOptionService.openOperation(iqOption, operation);
         return ResponseEntity.ok("");
     }
 
