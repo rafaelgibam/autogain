@@ -55,23 +55,6 @@ public class IQOptionController {
         return ResponseEntity.ok(ListSignal);
     }
 
-    @PostMapping("signals/{id}/operations")
-    public ResponseEntity <List<Operation>> operationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
-
-        Signal signal = signalService.getOne(id);
-
-        operations = operations.stream().map(operation -> {
-            operation.setSignal(signal);
-            return operation;
-        }).collect(Collectors.toList());
-
-        operations.stream().forEach(operation -> operationService.save(operation));
-
-     return ResponseEntity.ok(operations);
-    }
-
-
-
     @PostMapping("/operations")
     public ResponseEntity<String> openOperation(
             @RequestBody Operation operation
