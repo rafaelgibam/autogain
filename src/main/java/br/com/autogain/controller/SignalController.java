@@ -24,12 +24,10 @@ public class SignalController {
     private OperationService operationService;
 
 
-
     @GetMapping
     public boolean findAll() {
         return iqOption.isAuthenticated();
     }
-
 
 
     @PostMapping("signals/{id}/operations")
@@ -47,7 +45,14 @@ public class SignalController {
         return ResponseEntity.ok(operations);
     }
 
+    @PutMapping("signals/{id}")
+    public ResponseEntity<Signal> UpdateSignals(@RequestBody Signal signal, @PathVariable Long id){
 
+        signal.setId(id);
+
+
+      return ResponseEntity.ok(signalService.save(signal));
+    }
 
 
 
