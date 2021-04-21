@@ -3,14 +3,13 @@ package br.com.autogain.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
-@MappedSuperclass
+
+@Entity
+@Inheritance
 @EntityScan(basePackages = {"br.com.autogain.domain"})
-public  class BaseEntity {
+public abstract class BaseEntity {
     @Id
     @JsonProperty("id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

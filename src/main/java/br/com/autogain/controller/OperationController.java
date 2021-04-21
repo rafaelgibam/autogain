@@ -21,7 +21,7 @@ public class OperationController {
     @Autowired
     private IQOptionService iqOptionService;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<Operation>> findAll() {
         return ResponseEntity.ok(operationService.findAll());
     }
@@ -38,5 +38,23 @@ public class OperationController {
         String resultMessage = iqOptionService.openOperation(iqOption, operation);
         return ResponseEntity.ok(resultMessage);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Operation> updateOperations(@RequestBody Operation operation, @PathVariable Long id){
+
+     operation.setId(id);
+
+     return ResponseEntity.ok(operationService.save(operation));
+    }
+
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Operation> deleteOPeration(@PathVariable Long id){
+
+        operationService.delete(id);
+
+     return ResponseEntity.noContent().build();
+    }
+
+
 
 }
