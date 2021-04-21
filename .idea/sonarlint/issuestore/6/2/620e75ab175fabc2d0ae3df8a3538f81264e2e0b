@@ -1,0 +1,14 @@
+
+o
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ºˆþè
+\
+java:S34573"AFormat specifiers should be used instead of string concatenation.(”è§½ûÿÿÿÿ
+:
+java:S1640"Convert this Map to an EnumMap.(Ô³¨úýÿÿÿÿ
+Q	java:S125."<This block of commented-out lines of code should be removed.(½ÜÑÌ
+w
+java:S26293"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(”è§½ûÿÿÿÿ
+V
+java:S34570"AFormat specifiers should be used instead of string concatenation.(ò¸é<
+W
+java:S3457A"AFormat specifiers should be used instead of string concatenation.(þ‹ã“
