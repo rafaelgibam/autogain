@@ -31,7 +31,6 @@ public class SignalController {
 
       return ResponseEntity.ok(signalList);
     }
-
     @PostMapping()
     public ResponseEntity<Signal> saveSignal(@RequestBody Signal signal){
 
@@ -39,7 +38,6 @@ public class SignalController {
 
         return ResponseEntity.ok(signals);
     }
-
     @GetMapping("/{id}/operations")
     public ResponseEntity<List<Operation>> signalsOperationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
 
@@ -51,9 +49,6 @@ public class SignalController {
 
             return  ResponseEntity.ok(operations);
         }
-
-
-
     @PostMapping("/{id}/operations")
     public ResponseEntity<List<Operation>> operationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
 
@@ -68,28 +63,18 @@ public class SignalController {
 
         return ResponseEntity.ok(operations);
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<Signal> UpdateSignals(@RequestBody Signal signal, @PathVariable Long id){
 
         signal.setId(id);
 
-
       return ResponseEntity.ok(signalService.save(signal));
     }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletSignals(@RequestBody Signal signal, @PathVariable Long id){
+    public ResponseEntity<Void> deleteSignals(@PathVariable Long id){
 
-
-        signalService.deleteAllInBatch();
-
+        signalService.delete(id);
 
         return ResponseEntity.noContent().build();
     }
-
-
-
-
-
 }

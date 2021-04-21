@@ -43,12 +43,7 @@ public class GenericService<T extends BaseEntity>  {
         return  genericRepository.save(var1);
     };
 
-    public void deleteInBatch(Iterable<T> var1) {
-        genericRepository.deleteInBatch(var1);
-    }
-
-    public void deleteAllInBatch() {
-        genericRepository.deleteAllInBatch();
+    public void delete(Long id) {genericRepository.deleteById(id);
     }
 
     public T getOne(Long var1) {
