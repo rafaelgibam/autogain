@@ -43,6 +43,8 @@ public class IQOptionController {
         return ResponseEntity.ok("Connected... already!");
     }
 
+
+
     @PostMapping("/operations/signals")
     public ResponseEntity<Signal> saveOperationSignals(
             @RequestBody Signal signal

@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingDeque;
+
 import br.com.autogain.config.ApplicationContextHolder;
+import br.com.autogain.domain.Candle;
 import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Message;
 import br.com.autogain.converter.MessageConverter;
@@ -43,7 +46,10 @@ public class EventManager {
 		Events ev = Events.get(message.getName());
 
 		if(ev == null) {
-//			logger.info("[EVENT] ignored: " + messageName + " " + originalMessage);
+//			logger.info("[EVENT] ignored: " + message.getName() + " " + originalMessage);
+			if(message.getName().equals("get-candles")) {
+				logger.info("[EVENT] ignored: " + message.getName() + " " + originalMessage);
+			}
 			if(message.getName().equals("option-opened")) {
 				logger.info("[EVENT] ignored: " + message.getName() + " Operação em andamento...");
 			}

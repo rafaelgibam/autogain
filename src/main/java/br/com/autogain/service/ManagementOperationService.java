@@ -15,7 +15,7 @@ public class ManagementOperationService {
     }
 
     public BigInteger calculateSoros(Double takeProfit, Integer payout) {
-        // valor_proxima_entrada = valor_entrada + (valor_entrada * payout)
+        // valor_proxima_entrada = valor_entrada + ((valor_entrada * payout)/100)
         Double calculatedSoros = Math.ceil(takeProfit + ((takeProfit * payout)/100));
         return  BigInteger.valueOf(calculatedSoros.intValue());
     }
