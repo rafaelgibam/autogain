@@ -31,6 +31,15 @@ public class OperationController {
         return ResponseEntity.ok(operationService.getOne(id));
     }
 
+    @PostMapping()
+    public ResponseEntity<Operation> saveOperation(@RequestBody Operation operation){
+
+    Operation operations = operationService.save(operation);
+
+        return  ResponseEntity.ok(operations);
+    }
+
+
     @PostMapping("/operations")
     public ResponseEntity<String> openOperation(
             @RequestBody Operation operation
@@ -44,7 +53,7 @@ public class OperationController {
 
      operation.setId(id);
 
-     return ResponseEntity.ok(operationService.save(operation));
+        return ResponseEntity.ok(operationService.save(operation));
     }
 
     @DeleteMapping("/{id}")
@@ -52,7 +61,7 @@ public class OperationController {
 
         operationService.delete(id);
 
-     return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 
 
