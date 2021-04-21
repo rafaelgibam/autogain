@@ -7,6 +7,7 @@ import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.domain.User;
 import br.com.autogain.service.IQOptionService;
+import br.com.autogain.service.OperationService;
 import br.com.autogain.service.SignalService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -28,6 +30,8 @@ public class IQOptionController {
     private SignalService signalService;
     @Autowired
     private OperationConverter operationConverter;
+    @Autowired
+    private OperationService operationService;
 
     @PostMapping("/connects")
     public ResponseEntity<String> connect(
@@ -43,7 +47,21 @@ public class IQOptionController {
         return ResponseEntity.ok("Connected... already!");
     }
 
+    @GetMapping("/operations/signals")
+    public ResponseEntity<List<Signal>> findAll(){
 
+        List<Signal> ListSignal = signalService.findAll();
+
+        return ResponseEntity.ok(ListSignal);
+    }
+
+    @PostMapping("/operations")
+    public ResponseEntity<String> openOperation(
+            @RequestBody Operation operation
+            ) {
+        String resultMessage = iqOptionService.openOperation(iqOption, operation);
+        return ResponseEntity.ok(resultMessage);
+    }
 
     @PostMapping("/operations/signals")
     public ResponseEntity<Signal> saveOperationSignals(
@@ -56,6 +74,14 @@ public class IQOptionController {
     public ResponseEntity<String> openOperationSignals(@PathVariable("id_signal") Long id) {
         Signal signal = signalService.getOne(id);
         iqOptionService.openOperation(iqOption, signal);
+        return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/autos")
+    public ResponseEntity<String> autoOperation(
+            @RequestBody Operation operation
+    ) {
+        iqOptionService.openOperation(iqOption, operation);
         return ResponseEntity.ok("");
     }
 

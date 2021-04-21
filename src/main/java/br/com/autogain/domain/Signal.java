@@ -1,5 +1,6 @@
 package br.com.autogain.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,8 +18,12 @@ public class Signal extends BaseEntity {
     private BigInteger quantityWin;
     private BigInteger quantityLoose;
     private BigInteger hitPercentage;
+
+    @JsonIgnore
     @OneToMany
     private List<Operation> operations;
+
+    @JsonIgnore
     @OneToOne
     private ConfigOperation configOperation;
 }
