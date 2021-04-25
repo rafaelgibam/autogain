@@ -37,7 +37,6 @@ public class IQOptionController {
     public ResponseEntity<String> connect(
             @RequestBody User user
             ) {
-//        iqOption = new IQOption(user.getEmail(), user.getPassword());
         iqOption.initUser(user.getEmail(), user.getPassword());
         iqOption.connect();
         iqOption.getAllBinaryData();
@@ -49,9 +48,7 @@ public class IQOptionController {
 
     @GetMapping("/operations/signals")
     public ResponseEntity<List<Signal>> findAll(){
-
         List<Signal> ListSignal = signalService.findAll();
-
         return ResponseEntity.ok(ListSignal);
     }
 

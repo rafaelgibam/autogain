@@ -2,6 +2,7 @@ package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Inheritance
 @EntityScan(basePackages = {"br.com.autogain.domain"})
 public abstract class BaseEntity {
+
     @Id
     @JsonProperty("id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

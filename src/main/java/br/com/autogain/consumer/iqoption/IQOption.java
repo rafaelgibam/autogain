@@ -3,6 +3,8 @@ package br.com.autogain.consumer.iqoption;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 import br.com.autogain.consumer.iqoption.enums.Actives;
 import br.com.autogain.consumer.iqoption.enums.BalanceType;
@@ -67,6 +69,11 @@ public class IQOption implements EventListener {
 	private IQOptionWS webSocket;
 
 	/*
+	 * Queue of messages
+	 */
+	private BlockingQueue<String> queue;
+
+	/*
 	 * Services
 	 */
 	@Autowired
@@ -82,6 +89,7 @@ public class IQOption implements EventListener {
 		initListeners();
 		this.email = email;
 		this.password = password;
+		this.queue = new SynchronousQueue<>(true);
 	}
 
 	/**
@@ -101,6 +109,14 @@ public class IQOption implements EventListener {
 	public EventManager getEventManager() {
 		return this.eventManager;
 	}
+
+	/*
+	*
+	*/
+	public BlockingQueue<String> getQueue() {
+		return queue;
+	}
+
 
 	/**
 	 * Connect to both api and websocket
@@ -242,7 +258,6 @@ public class IQOption implements EventListener {
 	 *           End of REST API methods
 	 * ------------------------------------------------
 	 */
-	
 	@Override
 	public void update(Events ev, String message) {
 		if(Events.PROFILE.equals(ev)) {

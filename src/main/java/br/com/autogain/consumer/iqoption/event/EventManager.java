@@ -21,9 +21,7 @@ import org.springframework.stereotype.Component;
 public class EventManager {
 	
 	private final Logger logger = LoggerFactory.getLogger(EventManager.class);
-	
 	private Map<Events, List<EventListener>> subscribers = new HashMap<>();
-
 	MessageConverter messageConverter;
 
 	public EventManager() {

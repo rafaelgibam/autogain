@@ -6,6 +6,8 @@ import br.com.autogain.consumer.iqoption.enums.Actives;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class StrategyMarketService {
 
@@ -13,9 +15,11 @@ public class StrategyMarketService {
     private IQOption iqOption;
 
     public void BBWithEMA() { }
+
     public void getCandleBackTrend() {
-        iqOption.getCandles(1, 1, 60, Actives.EURUSD_OTC);
+
     }
+
     public void MHI() {
 
     }
