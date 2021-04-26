@@ -1,10 +1,12 @@
 package br.com.autogain.domain;
 
+import br.com.autogain.config.CustomDateTimeDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Data;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.*;
 import org.joda.time.DateTime;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,25 +16,24 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@Entity(name = "operation")
+@Document(collation = "operations")
 public class Operation extends BaseEntity{
+
     @JsonProperty("expiration")
     private int expiration;
+
     @JsonProperty("direction")
     private String direction;
-    @JsonProperty("price")
-    private BigDecimal price;
+
     @JsonProperty("active")
     private String active;
-    @Lob
-    @Column(length = 10000, columnDefinition="TEXT")
+
     @JsonProperty("entry_time")
+    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     private DateTime entryTime;
-    @JsonIgnore
+
     @JsonProperty("status")
     private boolean status;
-    @JsonIgnore
-    @OneToOne
-    @JsonProperty("signal")
-    private Signal signal;
+
+
 }

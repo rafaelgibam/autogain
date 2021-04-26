@@ -47,7 +47,7 @@ public class GenericService<T extends BaseEntity>  {
     }
 
     public T getOne(Long var1) {
-        return genericRepository.getOne(var1);
+        return genericRepository.findById(var1).get();
     }
 
     public <S extends T> List<S> findAll(Example<S> var1) {

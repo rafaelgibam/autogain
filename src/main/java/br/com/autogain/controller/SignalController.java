@@ -1,5 +1,4 @@
 package br.com.autogain.controller;
-
 import br.com.autogain.consumer.iqoption.IQOption;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
@@ -8,7 +7,6 @@ import br.com.autogain.service.SignalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,29 +37,22 @@ public class SignalController {
         return ResponseEntity.ok(signals);
     }
     @GetMapping("/{id}/operations")
-    public ResponseEntity<List<Operation>> signalsOperationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
+    public ResponseEntity<List<Operation>> signalsOperationsList(@PathVariable Long id){
 
         Signal signals = signalService.getOne(id);
+        return  ResponseEntity.ok(signals.getOperations());
+    }
 
-        operations = operations.stream().map(operation -> {
-            operation.setSignal(signals);
-            return operation;}).collect(Collectors.toList());
-
-            return  ResponseEntity.ok(operations);
-        }
     @PostMapping("/{id}/operations")
-    public ResponseEntity<List<Operation>> operationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
+    public ResponseEntity<Signal> operationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
 
         Signal signal = signalService.getOne(id);
 
-        operations = operations.stream().map(operation -> {
-            operation.setSignal(signal);
-            return operation;
-        }).collect(Collectors.toList());
+        signal.setOperations(operations);
 
-        operations.stream().forEach(operation -> operationService.save(operation));
+        signalService.save(signal);
 
-        return ResponseEntity.ok(operations);
+        return ResponseEntity.ok(signal);
     }
     @PutMapping("/{id}")
     public ResponseEntity<Signal> UpdateSignals(@RequestBody Signal signal, @PathVariable Long id){

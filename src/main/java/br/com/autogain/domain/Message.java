@@ -2,11 +2,12 @@ package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
 
 @Data
-@Entity(name = "message")
+@Document(collation = "messages")
 public class Message extends BaseEntity {
 
 	@JsonProperty("name")
@@ -15,8 +16,6 @@ public class Message extends BaseEntity {
 	@JsonProperty("session_id")
 	private String sessionId;
 
-	@Lob
-	@Column(length = 10000, columnDefinition="TEXT")
 	@JsonProperty("msg")
 	private String msg;
 }

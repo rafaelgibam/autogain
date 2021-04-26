@@ -2,6 +2,7 @@ package br.com.autogain.domain;
 
 import br.com.autogain.enums.ManagementOperation;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -10,12 +11,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@Entity(name = "cofing_operation")
+@Document(collation = "config_operations")
 public class ConfigOperation extends BaseEntity{
     private BigDecimal price;
     private ManagementOperation managementOperation;
     private BigDecimal stop;
     private BigDecimal take;
-    @OneToMany
     private List<Signal> signal;
 }
