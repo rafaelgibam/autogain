@@ -65,8 +65,8 @@ public class OperationController {
     }
 
     @GetMapping("/test")
-    public void test() throws InterruptedException {
-        strategyMarketService.getCandleBackTrend();
+    public String test() {
+        return strategyMarketService.getCandleBackTrend();
     }
 
 }

@@ -17,12 +17,14 @@ import br.com.autogain.consumer.iqoption.factory.ResponseFactory;
 import br.com.autogain.consumer.iqoption.service.ChangeBalanceBaseService;
 import br.com.autogain.consumer.iqoption.service.LoginBaseService;
 import br.com.autogain.consumer.iqoption.utils.IQUtils;
+import br.com.autogain.consumer.iqoption.ws.message.Message;
 import br.com.autogain.consumer.iqoption.ws.request.BaseRequestMessage;
 import br.com.autogain.consumer.iqoption.ws.request.BinaryBuyRequest;
 import br.com.autogain.consumer.iqoption.ws.request.CandleBody;
 import br.com.autogain.consumer.iqoption.ws.request.Msg;
 import br.com.autogain.domain.Balance;
 import br.com.autogain.consumer.iqoption.ws.response.ProfileRootMessage;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,12 +68,8 @@ public class IQOption implements EventListener {
 	/*
 	 * Web Socket
 	 */
+	@Getter
 	private IQOptionWS webSocket;
-
-	/*
-	 * Queue of messages
-	 */
-	private BlockingQueue<String> queue;
 
 	/*
 	 * Services
@@ -89,7 +87,6 @@ public class IQOption implements EventListener {
 		initListeners();
 		this.email = email;
 		this.password = password;
-		this.queue = new SynchronousQueue<>(true);
 	}
 
 	/**
@@ -109,14 +106,6 @@ public class IQOption implements EventListener {
 	public EventManager getEventManager() {
 		return this.eventManager;
 	}
-
-	/*
-	*
-	*/
-	public BlockingQueue<String> getQueue() {
-		return queue;
-	}
-
 
 	/**
 	 * Connect to both api and websocket
@@ -193,9 +182,10 @@ public class IQOption implements EventListener {
 	 * @param size - size in seconds of each candle  
 	 * @param active - id of the ticker
 	 */
-	public void getCandles(int count, long to, int size,  Actives active ) {
+	public synchronized String getCandles(int count, long to, int size, Actives active ) {
 		CandleBody body = new CandleBody(count, to, size, active.getId());
 		webSocket.sendMessage(new BaseRequestMessage<Msg<CandleBody>>("sendMessage", "", new Msg<CandleBody>("get-candles", "2.0", body)));
+		return webSocket.getSyncMsgQueue().toString();
 	}
 	
 	/**

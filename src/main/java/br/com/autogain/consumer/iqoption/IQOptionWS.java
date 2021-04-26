@@ -1,6 +1,7 @@
 package br.com.autogain.consumer.iqoption;
 
 import java.net.URI;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -9,6 +10,9 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+
+import br.com.autogain.consumer.iqoption.ws.message.Message;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +27,8 @@ public class IQOptionWS {
 
     Session userSession = null;
     private MessageHandler messageHandler;
+    @Getter
+    private final ConcurrentLinkedQueue<Message> syncMsgQueue = new ConcurrentLinkedQueue<>();
 
     public IQOptionWS(URI endpointURI) {
         try {
@@ -50,6 +56,8 @@ public class IQOptionWS {
     @OnMessage
     public void onMessage(String message) {
         if (this.messageHandler != null) {
+            Message msg = Message.Builder().buildFromString(message);
+            syncMsgQueue.add(msg);
             this.messageHandler.handleMessage(message);
         }
     }

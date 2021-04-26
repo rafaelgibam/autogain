@@ -16,8 +16,8 @@ public class StrategyMarketService {
 
     public void BBWithEMA() { }
 
-    public void getCandleBackTrend() {
-
+    public String getCandleBackTrend() {
+       return iqOption.getCandles(1, 1, 60, Actives.EURUSD);
     }
 
     public void MHI() {
