@@ -7,7 +7,6 @@ import br.com.autogain.service.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -40,14 +39,6 @@ public class OperationController {
     }
 
 
-    @PostMapping("/operations")
-    public ResponseEntity<String> openOperation(
-            @RequestBody Operation operation
-    ) {
-        String resultMessage = iqOptionService.openOperation(iqOption, operation);
-        return ResponseEntity.ok(resultMessage);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Operation> updateOperations(@RequestBody Operation operation, @PathVariable Long id){
 
@@ -63,7 +54,4 @@ public class OperationController {
 
         return ResponseEntity.noContent().build();
     }
-
-
-
 }

@@ -3,6 +3,7 @@ package br.com.autogain.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joda.time.DateTime;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 @Data
-@Entity(name = "event_message")
+@Document(collation = "event_messages")
 public class EventMessage extends BaseEntity {
 
         @JsonProperty("refund")
@@ -168,7 +169,6 @@ public class EventMessage extends BaseEntity {
         private Boolean isRolledOver;
         @JsonProperty("expiration_value")
         private BigDecimal expirationValue;
-        @OneToOne
         @JsonProperty("current_balance")
         private Balance currentBalance;
         @JsonProperty("rollover_initial_commission_amount")

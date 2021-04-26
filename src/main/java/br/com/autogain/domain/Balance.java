@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
 
 @Data
-@Entity(name = "balance")
+@Document(collation = "balances")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "id", "user_id", "type", "amount", "enrolled_amount", "enrolled_sum_amount", "hold_amount",
