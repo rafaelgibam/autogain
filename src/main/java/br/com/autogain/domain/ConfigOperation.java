@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@Document(collation = "config_operations")
+@Document(collection = "config_operations")
 public class ConfigOperation extends BaseEntity{
     private BigDecimal price;
     private ManagementOperation managementOperation;

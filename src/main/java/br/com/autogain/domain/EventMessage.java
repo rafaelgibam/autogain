@@ -11,7 +11,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 @Data
-@Document(collation = "event_messages")
+@Document(collection = "event_messages")
 public class EventMessage extends BaseEntity {
 
         @JsonProperty("refund")

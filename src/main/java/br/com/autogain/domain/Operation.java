@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@Document(collation = "operations")
+@Document(collection = "operations")
 public class Operation extends BaseEntity{
 
     @JsonProperty("expiration")

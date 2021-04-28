@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.Entity;
 
 @Data
-@Document(collation = "balances")
+@Document(collection = "balances")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "id", "user_id", "type", "amount", "enrolled_amount", "enrolled_sum_amount", "hold_amount",

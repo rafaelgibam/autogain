@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.*;
 
 @Data
-@Document(collation = "messages")
+@Document(collection = "messages")
 public class Message extends BaseEntity {
 
 	@JsonProperty("name")

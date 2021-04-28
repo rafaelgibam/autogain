@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Data
-@Document(collation = "signals")
+@Document(collection = "signals")
 public class Signal extends BaseEntity {
 
     private String name;

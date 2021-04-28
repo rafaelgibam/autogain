@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.Entity;
 
 @Data
-@Document(collation ="users")
+@Document(collection ="users")
 public class User extends BaseEntity{
     private String email;
     private String password;
