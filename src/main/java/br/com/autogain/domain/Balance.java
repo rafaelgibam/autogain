@@ -18,6 +18,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Balance {
 
 	@Id
+	private String balanceId;
+
 	private Long id;
 	@JsonProperty("user_id")
 	private long userId;

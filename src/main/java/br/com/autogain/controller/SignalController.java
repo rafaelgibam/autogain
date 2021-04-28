@@ -63,7 +63,7 @@ public class SignalController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Signal> UpdateSignals(@RequestBody Signal signal, @PathVariable Long id){
+    public ResponseEntity<Signal> UpdateSignals(@RequestBody Signal signal, @PathVariable String id){
         signal.setId(id);
         return ResponseEntity.ok(signalRepository.save(signal));
     }

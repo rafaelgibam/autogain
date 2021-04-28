@@ -11,9 +11,10 @@ import java.util.List;
 @Document(collection = "signals")
 public class Signal {
     @Id
-    private Long id;
-
+    private String id;
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("quantity_win")
     private BigInteger quantityWin;
     @JsonProperty("quantity_loose")
     private BigInteger quantityLoose;

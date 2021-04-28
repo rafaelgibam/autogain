@@ -43,7 +43,7 @@ public class OperationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Operation> updateOperations(@RequestBody Operation operation, @PathVariable Long id){
+    public ResponseEntity<Operation> updateOperations(@RequestBody Operation operation, @PathVariable String id){
         operation.setId(id);
         return ResponseEntity.ok(operationRepository.save(operation));
     }

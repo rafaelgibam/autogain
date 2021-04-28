@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class Operation {
 
     @Id
-    private Long id;
+    private String id;
 
     @JsonProperty("expiration")
     private int expiration;

@@ -13,7 +13,7 @@ import java.util.Date;
 @Document(collection = "event_messages")
 public class EventMessage {
         @Id
-        private Long id;
+        private String id;
         @JsonProperty("refund")
         private BigInteger refund;
         @JsonProperty("win")
