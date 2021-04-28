@@ -1,10 +1,8 @@
 package br.com.autogain.service;
 
-
 import br.com.autogain.consumer.iqoption.IQOption;
 import br.com.autogain.consumer.iqoption.enums.Actives;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

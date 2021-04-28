@@ -11,6 +11,7 @@ import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.dto.OperationDTO;
+import br.com.autogain.repository.EventMessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.jni.Time;
 import org.joda.time.DateTime;
@@ -28,7 +29,7 @@ public class IQOptionService implements EventListener {
     @Autowired
     private OperationConverter converter;
     @Autowired
-    private EventMessageService eventMessageService;
+    private EventMessageRepository eventMessageRepository;
 
     public String openOperation(IQOption iqOption, Operation operation) {
         iqOption.buyBinary(operation.getPrice().doubleValue(),
@@ -68,7 +69,7 @@ public class IQOptionService implements EventListener {
     }
 
     private void openAutoOperation(IQOption iqOption, Operation operation) {
-        EventMessage eventMessage = eventMessageService.findAll(Sort.by(Sort.Direction.ASC, "open_time_millisecond"))
+        EventMessage eventMessage = eventMessageRepository.findAll(Sort.by(Sort.Direction.ASC, "open_time_millisecond"))
                             .stream().findFirst().get();
         if(eventMessage.getResult().equals("loose") && eventMessage.getDirection().equals("call")) {
             operation.setDirection("put");

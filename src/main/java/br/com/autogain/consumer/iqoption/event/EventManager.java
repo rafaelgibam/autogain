@@ -12,6 +12,7 @@ import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Message;
 import br.com.autogain.converter.MessageConverter;
 import br.com.autogain.repository.EventMessageRepository;
+import br.com.autogain.repository.MessageRepository;
 import br.com.autogain.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,14 +55,14 @@ public class EventManager {
 			if(message.getName().equals("option-closed")){
 				logger.info("[EVENT] ignored: " + message.getName() + " " + messageConverter.messageReturnOperation(originalMessage));
 				EventMessageRepository eventMessageRepository = ApplicationContextHolder.getContext().getBean(EventMessageRepository.class);
-				MessageService messageService = ApplicationContextHolder.getContext().getBean(MessageService.class);
+				MessageRepository messageRepository = ApplicationContextHolder.getContext().getBean(MessageRepository.class);
 				EventMessage eventMessage = messageConverter.convertMessageToOperationResponse(message);
 				if(!eventMessageRepository.existsByIndex(eventMessage.getIndex())
 				   && eventMessage.getResult().equals("win")
 				   || eventMessage.getResult().equals("equal")
 				   || eventMessage.getResult().equals("loose")) {
 					eventMessageRepository.save(messageConverter.convertMessageToOperationResponse(message));
-					messageService.save(message);
+					messageRepository.save(message);
 				}
 			}
 			return;

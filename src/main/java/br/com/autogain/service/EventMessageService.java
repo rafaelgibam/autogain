@@ -4,5 +4,5 @@ import br.com.autogain.domain.EventMessage;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EventMessageService extends GenericService<EventMessage> {
+public class EventMessageService {
 }

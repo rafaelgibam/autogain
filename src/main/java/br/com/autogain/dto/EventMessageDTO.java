@@ -3,13 +3,13 @@ package br.com.autogain.dto;
 import br.com.autogain.domain.Balance;
 import br.com.autogain.domain.Message;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import org.joda.time.DateTime;
-
-import javax.persistence.OneToOne;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+@Data
 public class EventMessageDTO {
     @JsonProperty("refund")
     private BigInteger refund;
@@ -109,7 +109,6 @@ public class EventMessageDTO {
     private BigDecimal price;
     @JsonProperty("exp")
     private BigInteger exp;
-    @OneToOne
     @JsonProperty("message")
     private Message message;
     @JsonProperty("created_millisecond")
@@ -166,7 +165,6 @@ public class EventMessageDTO {
     private Boolean isRolledOver;
     @JsonProperty("expiration_value")
     private BigDecimal expirationValue;
-    @OneToOne
     @JsonProperty("current_balance")
     private Balance currentBalance;
     @JsonProperty("rollover_initial_commission_amount")

@@ -3,17 +3,17 @@ package br.com.autogain.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.joda.time.DateTime;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
 @Data
 @Document(collection = "event_messages")
-public class EventMessage extends BaseEntity {
-
+public class EventMessage {
+        @Id
+        private Long id;
         @JsonProperty("refund")
         private BigInteger refund;
         @JsonProperty("win")
@@ -112,7 +112,6 @@ public class EventMessage extends BaseEntity {
         private BigDecimal price;
         @JsonProperty("exp")
         private BigInteger exp;
-        @OneToOne
         @JsonProperty("message")
         private Message message;
         @JsonProperty("created_millisecond")

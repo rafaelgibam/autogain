@@ -7,6 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SignalService extends GenericService<Signal>{
+public class SignalService {
 
 }

@@ -4,5 +4,5 @@ import br.com.autogain.domain.Message;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessageService extends GenericService<Message> {
+public class MessageService {
 }

@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.Entity;
 
 @Data
 @Document(collection = "balances")
@@ -16,8 +15,10 @@ import javax.persistence.Entity;
 @JsonPropertyOrder({ "id", "user_id", "type", "amount", "enrolled_amount", "enrolled_sum_amount", "hold_amount",
 		"orders_amount", "auth_amount", "equivalent", "currency", "tournament_id", "tournament_name", "is_fiat",
 		"is_marginal", "has_deposits" })
-public class Balance extends BaseEntity {
+public class Balance {
 
+	@Id
+	private Long id;
 	@JsonProperty("user_id")
 	private long userId;
 	@JsonProperty("type")

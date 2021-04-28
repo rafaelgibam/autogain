@@ -1,9 +1,10 @@
 package br.com.autogain.repository;
 
-import br.com.autogain.domain.BaseEntity;
+import br.com.autogain.domain.Operation;
+import br.com.autogain.domain.Signal;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GenericRepository<T extends BaseEntity> extends MongoRepository<T, String> {
+public interface SignalRepository extends MongoRepository<Signal, String> {
 }

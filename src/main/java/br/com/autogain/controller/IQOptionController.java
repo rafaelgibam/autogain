@@ -6,6 +6,8 @@ import br.com.autogain.converter.OperationConverter;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.domain.User;
+import br.com.autogain.repository.OperationRepository;
+import br.com.autogain.repository.SignalRepository;
 import br.com.autogain.service.IQOptionService;
 import br.com.autogain.service.OperationService;
 import br.com.autogain.service.SignalService;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,11 +30,11 @@ public class IQOptionController {
     @Autowired
     private IQOptionService iqOptionService;
     @Autowired
-    private SignalService signalService;
+    private SignalRepository signalRepository;
     @Autowired
     private OperationConverter operationConverter;
     @Autowired
-    private OperationService operationService;
+    private OperationRepository operationRepository;
 
     @PostMapping("/connects")
     public ResponseEntity<String> connect(
@@ -48,7 +51,7 @@ public class IQOptionController {
 
     @GetMapping("/operations/signals")
     public ResponseEntity<List<Signal>> findAll(){
-        List<Signal> ListSignal = signalService.findAll();
+        List<Signal> ListSignal = signalRepository.findAll();
         return ResponseEntity.ok(ListSignal);
     }
 
@@ -64,14 +67,17 @@ public class IQOptionController {
     public ResponseEntity<Signal> saveOperationSignals(
             @RequestBody Signal signal
     ) {
-        return ResponseEntity.ok(signalService.save(signal));
+        return ResponseEntity.ok(signalRepository.save(signal));
     }
 
     @GetMapping("/operations/signals/{id_signal}")
-    public ResponseEntity<String> openOperationSignals(@PathVariable("id_signal") String id) {
-        Signal signal = signalService.getOne(id);
-        iqOptionService.openOperation(iqOption, signal);
-        return ResponseEntity.ok("");
+    public ResponseEntity<Signal> openOperationSignals(@PathVariable("id_signal") String id) {
+        Optional<Signal> osignal = signalRepository.findById(id);
+        if(osignal.isPresent()) {
+            iqOptionService.openOperation(iqOption, osignal.get());
+            return ResponseEntity.ok(osignal.get());
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/autos")
