@@ -37,14 +37,14 @@ public class SignalController {
         return ResponseEntity.ok(signals);
     }
     @GetMapping("/{id}/operations")
-    public ResponseEntity<List<Operation>> signalsOperationsList(@PathVariable Long id){
+    public ResponseEntity<List<Operation>> signalsOperationsList(@PathVariable String id){
 
         Signal signals = signalService.getOne(id);
         return  ResponseEntity.ok(signals.getOperations());
     }
 
     @PostMapping("/{id}/operations")
-    public ResponseEntity<Signal> operationsList(@PathVariable Long id, @RequestBody List<Operation> operations){
+    public ResponseEntity<Signal> operationsList(@PathVariable String id, @RequestBody List<Operation> operations){
 
         Signal signal = signalService.getOne(id);
 
@@ -62,7 +62,7 @@ public class SignalController {
       return ResponseEntity.ok(signalService.save(signal));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSignals(@PathVariable Long id){
+    public ResponseEntity<Void> deleteSignals(@PathVariable String id){
 
         signalService.delete(id);
 

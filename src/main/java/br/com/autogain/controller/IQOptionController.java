@@ -68,7 +68,7 @@ public class IQOptionController {
     }
 
     @GetMapping("/operations/signals/{id_signal}")
-    public ResponseEntity<String> openOperationSignals(@PathVariable("id_signal") Long id) {
+    public ResponseEntity<String> openOperationSignals(@PathVariable("id_signal") String id) {
         Signal signal = signalService.getOne(id);
         iqOptionService.openOperation(iqOption, signal);
         return ResponseEntity.ok("");

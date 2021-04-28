@@ -23,30 +23,18 @@ public class GenericService<T extends BaseEntity>  {
         return genericRepository.findAll(sort);
     }
 
-    public List<T> findAllById(Iterable<Long> var1) {
-        return genericRepository.findAllById(var1);
-    }
-
     public <S extends T> List<S> saveAll(Iterable<S> var1) {
         return genericRepository.saveAll(var1);
-    }
-
-    public void flush() {
-        genericRepository.flush();
-    }
-
-    public <S extends T> S saveAndFlush(S var1) {
-        return genericRepository.saveAndFlush(var1);
     }
 
     public <S extends T> S save(S var1) {
         return  genericRepository.save(var1);
     };
 
-    public void delete(Long id) {genericRepository.deleteById(id);
+    public void delete(String id) {genericRepository.deleteById(id);
     }
 
-    public T getOne(Long var1) {
+    public T getOne(String var1) {
         return genericRepository.findById(var1).get();
     }
 

@@ -27,6 +27,8 @@ public class Operation extends BaseEntity{
 
     @JsonProperty("active")
     private String active;
+    
+    private BigDecimal price;
 
     @JsonProperty("entry_time")
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)

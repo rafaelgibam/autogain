@@ -26,7 +26,7 @@ public class OperationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Operation> find(@PathVariable Long id) {
+    public ResponseEntity<Operation> find(@PathVariable String id) {
         return ResponseEntity.ok(operationService.getOne(id));
     }
 
@@ -48,7 +48,7 @@ public class OperationController {
     }
 
     @DeleteMapping("/{id}")
-    public  ResponseEntity<Operation> deleteOPeration(@PathVariable Long id){
+    public  ResponseEntity<Operation> deleteOPeration(@PathVariable String id){
 
         operationService.delete(id);
 
