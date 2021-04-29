@@ -1,5 +1,11 @@
 
 }
-java:S1488+"aImmediately return this expression instead of assigning it to the temporary variable "operation".(ŸâÒM8¹Öö˜/
-~
-java:S1488"dImmediately return this expression instead of assigning it to the temporary variable "operationDTO".(­ÔÀK8ä°ğ¸/
+java:S1488"aImmediately return this expression instead of assigning it to the temporary variable "operation".(ŸâÒM8¹Öö˜/
+}
+java:S1488'"aImmediately return this expression instead of assigning it to the temporary variable "operation".(ŸâÒM8¸Ğ‹â/
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8¸Ğ‹â/
+\
+java:S1128":Remove this unused import 'br.com.autogain.domain.Signal'.(±ç×„üÿÿÿÿ8¸Ğ‹â/
+M
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8¸Ğ‹â/

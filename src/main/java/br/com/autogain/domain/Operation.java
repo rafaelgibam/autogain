@@ -1,6 +1,7 @@
 package br.com.autogain.domain;
 
 import br.com.autogain.config.CustomDateTimeDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
@@ -25,7 +26,8 @@ public class Operation {
 
     @JsonProperty("active")
     private String active;
-    
+
+    @JsonIgnore
     private BigDecimal price;
 
     @JsonProperty("entry_time")

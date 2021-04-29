@@ -29,11 +29,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
-                .title("Spring Boot REST API")
-                .description("\"Spring Boot REST API for greeting people\"")
+                .title("AG - AutoGain")
+                .description("\"API Restfull para operações no mercado financeiro\"")
                 .version("1.0.0")
-                .license("Apache License Version 2.0")
-                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"")
+                .license("Conzyx License Version 1.0")
+                .licenseUrl("#")
                 .build();
     }
 

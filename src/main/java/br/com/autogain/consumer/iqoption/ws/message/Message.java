@@ -53,7 +53,11 @@ public class Message {
 			msg = jsonMsg.get("msg").toString();
 		}
 		else {
-			msg = jsonMsg.getJSONObject("msg").toString();
+			if(jsonMsg.get("msg") instanceof  JSONObject) {
+				msg = jsonMsg.getJSONObject("msg").toString();
+			} else {
+				msg = jsonMsg.get("msg").toString();
+			}
 		}
 
 		return this;

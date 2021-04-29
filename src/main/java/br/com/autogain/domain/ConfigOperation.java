@@ -12,7 +12,7 @@ import java.util.List;
 @Document(collection = "config_operations")
 public class ConfigOperation {
     @Id
-    private Long id;
+    private String id;
     @JsonProperty("price")
     private BigDecimal price;
     @JsonProperty("management_operation")
