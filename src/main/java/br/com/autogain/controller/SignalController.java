@@ -1,17 +1,16 @@
 package br.com.autogain.controller;
 import br.com.autogain.consumer.iqoption.IQOption;
+import br.com.autogain.domain.ConfigOperation;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
+import br.com.autogain.repository.ConfigOperationRepository;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.repository.SignalRepository;
-import br.com.autogain.service.OperationService;
-import br.com.autogain.service.SignalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/signals")
@@ -23,6 +22,8 @@ public class SignalController {
     private SignalRepository signalRepository;
     @Autowired
     private OperationRepository operationRepository;
+    @Autowired
+    private ConfigOperationRepository configOperationRepository;
 
 
     @GetMapping
@@ -31,6 +32,14 @@ public class SignalController {
        List<Signal> signalList = signalRepository.findAll();
 
       return ResponseEntity.ok(signalList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Signal>> listIdSignals(@PathVariable String id){
+
+        Optional<Signal> listSignals = signalRepository.findById(id);
+
+     return ResponseEntity.ok(listSignals);
     }
 
     @PostMapping
@@ -73,4 +82,20 @@ public class SignalController {
         signalRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @PostMapping("/{id}/config")
+    public ResponseEntity<Signal> signalsConfig(@PathVariable String id, @RequestBody ConfigOperation configOperation){
+
+        Optional<Signal> csignal = signalRepository.findById(id);
+        if(csignal.isPresent()) {
+            csignal.get().setConfigOperation(configOperation);
+            signalRepository.save(csignal.get());
+            return ResponseEntity.ok(csignal.get());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }
