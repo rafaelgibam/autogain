@@ -1,11 +1,14 @@
 package br.com.autogain.controller;
 
 import br.com.autogain.consumer.iqoption.IQOption;
+import br.com.autogain.consumer.iqoption.ws.message.Message;
+import br.com.autogain.consumer.iqoption.ws.response.Candle;
 import br.com.autogain.domain.ConfigOperation;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.repository.ConfigOperationRepository;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.service.IQOptionService;
+import br.com.autogain.service.StrategyMarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,8 @@ public class OperationController {
     private ConfigOperationRepository configOperationRepository;
     @Autowired
     private IQOptionService iqOptionService;
+    @Autowired
+    private StrategyMarketService strategyMarketService;
 
     @GetMapping
     public ResponseEntity<List<Operation>> findAll() {
@@ -82,6 +87,12 @@ public class OperationController {
     public ResponseEntity<ConfigOperation> deleteConfiguration(@PathVariable String id) {
         configOperationRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/start")
+    public ResponseEntity<List<Candle>> startAutoOperation() {
+        return ResponseEntity.ok(strategyMarketService.getCandleBackTrend());
+//        return ResponseEntity.ok("Auto Operação Iniciada com Sucesso!");
     }
 
 }

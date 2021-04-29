@@ -2,9 +2,11 @@ package br.com.autogain.consumer.iqoption;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
+import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 import br.com.autogain.consumer.iqoption.enums.Actives;
 import br.com.autogain.consumer.iqoption.enums.BalanceType;
@@ -22,9 +24,14 @@ import br.com.autogain.consumer.iqoption.ws.request.BaseRequestMessage;
 import br.com.autogain.consumer.iqoption.ws.request.BinaryBuyRequest;
 import br.com.autogain.consumer.iqoption.ws.request.CandleBody;
 import br.com.autogain.consumer.iqoption.ws.request.Msg;
+import br.com.autogain.consumer.iqoption.ws.response.Candle;
 import br.com.autogain.domain.Balance;
 import br.com.autogain.consumer.iqoption.ws.response.ProfileRootMessage;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.SneakyThrows;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +40,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
+import springfox.documentation.spring.web.json.Json;
 
 @Service
 public class IQOption implements EventListener {
@@ -182,10 +190,25 @@ public class IQOption implements EventListener {
 	 * @param size - size in seconds of each candle  
 	 * @param active - id of the ticker
 	 */
-	public synchronized String getCandles(int count, long to, int size, Actives active ) {
+	@SneakyThrows
+	public synchronized List<Candle> getCandles(int count, long to, int size, Actives active ) {
 		CandleBody body = new CandleBody(count, to, size, active.getId());
 		webSocket.sendMessage(new BaseRequestMessage<Msg<CandleBody>>("sendMessage", "", new Msg<CandleBody>("get-candles", "2.0", body)));
-		return webSocket.getSyncMsgQueue().toString();
+
+		List<Message> messages = webSocket.getSyncMsgQueue().stream()
+				.filter(message -> message.getName().equals("candles"))
+				.collect(Collectors.toList());
+		messages.sort(Comparator.comparing(m -> m.getTimeCreated().getTime()));
+		Optional<Message> message = Optional.empty();
+		if(!messages.isEmpty()) {
+			 message = Optional.ofNullable(messages.get(messages.size()-1));
+		}
+		if (message.isPresent()) {
+			JSONObject jsonObject = new JSONObject(message.get().getMsg());
+			List<Candle> candles = new ObjectMapper().readValue(jsonObject.get("candles").toString(), new TypeReference<List<Candle>>(){});
+			return candles;
+		}
+		return null;
 	}
 	
 	/**
