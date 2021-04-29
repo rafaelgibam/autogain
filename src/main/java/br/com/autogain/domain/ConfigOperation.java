@@ -21,6 +21,4 @@ public class ConfigOperation {
     private BigDecimal stop;
     @JsonProperty("take")
     private BigDecimal take;
-    @JsonProperty("signals")
-    private List<Signal> signals;
 }

@@ -66,6 +66,15 @@ public class OperationController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/configs/{id}")
+    public ResponseEntity<Optional<ConfigOperation>> getIdConfigurations(@PathVariable String id){
+
+        Optional<ConfigOperation> idConfigOperations = configOperationRepository.findById(id);
+
+        return ResponseEntity.ok(idConfigOperations);
+        }
+
+
     @PostMapping("/configs")
     public ResponseEntity<ConfigOperation> saveConfiguration(@RequestBody ConfigOperation configOperation) {
         return ResponseEntity.ok(configOperationRepository.save(configOperation));

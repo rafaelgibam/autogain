@@ -4,14 +4,11 @@ import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.repository.SignalRepository;
-import br.com.autogain.service.OperationService;
-import br.com.autogain.service.SignalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/signals")
@@ -31,6 +28,14 @@ public class SignalController {
        List<Signal> signalList = signalRepository.findAll();
 
       return ResponseEntity.ok(signalList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Signal>> listIdSignals(@PathVariable String id){
+
+        Optional<Signal> listSignals = signalRepository.findById(id);
+
+     return ResponseEntity.ok(listSignals);
     }
 
     @PostMapping
