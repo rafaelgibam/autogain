@@ -1,7 +1,9 @@
 package br.com.autogain.controller;
 import br.com.autogain.consumer.iqoption.IQOption;
+import br.com.autogain.domain.ConfigOperation;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
+import br.com.autogain.repository.ConfigOperationRepository;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.repository.SignalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class SignalController {
     private SignalRepository signalRepository;
     @Autowired
     private OperationRepository operationRepository;
+    @Autowired
+    private ConfigOperationRepository configOperationRepository;
 
 
     @GetMapping
@@ -78,4 +82,20 @@ public class SignalController {
         signalRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @PostMapping("/{id}/config")
+    public ResponseEntity<Signal> signalsConfig(@PathVariable String id, @RequestBody ConfigOperation configOperation){
+
+        Optional<Signal> csignal = signalRepository.findById(id);
+        if(csignal.isPresent()) {
+            csignal.get().setConfigOperation(configOperation);
+            signalRepository.save(csignal.get());
+            return ResponseEntity.ok(csignal.get());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }
