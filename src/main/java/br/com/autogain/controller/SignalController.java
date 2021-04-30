@@ -84,7 +84,7 @@ public class SignalController {
     }
 
 
-    @PostMapping("/{id}/config")
+    @PostMapping("/{id}/configs")
     public ResponseEntity<Signal> signalsConfig(@PathVariable String id, @RequestBody ConfigOperation configOperation){
 
         Optional<Signal> csignal = signalRepository.findById(id);
@@ -95,6 +95,7 @@ public class SignalController {
         }
         return ResponseEntity.noContent().build();
     }
+
 
 
 
