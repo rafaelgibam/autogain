@@ -6,11 +6,13 @@ import br.com.autogain.domain.Signal;
 import br.com.autogain.repository.ConfigOperationRepository;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.repository.SignalRepository;
+import br.com.autogain.service.IQOptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/signals")
@@ -24,6 +26,8 @@ public class SignalController {
     private OperationRepository operationRepository;
     @Autowired
     private ConfigOperationRepository configOperationRepository;
+    @Autowired
+    private IQOptionService iqOptionService;
 
 
     @GetMapping
@@ -63,8 +67,16 @@ public class SignalController {
     public ResponseEntity<Signal> operationsList(@PathVariable String id, @RequestBody List<Operation> operations){
 
         Optional<Signal> osignal = signalRepository.findById(id);
+
         if(osignal.isPresent()) {
-            osignal.get().setOperations(operations);
+
+            List<Operation> operationsMap = operations.stream().map(operation -> {
+                operation.setSignalId(id);
+                return operation;
+            }).collect(Collectors.toList());
+
+            operationRepository.saveAll(operationsMap);
+            osignal.get().setOperations(operationRepository.findBySignalId(id));
             signalRepository.save(osignal.get());
             return ResponseEntity.ok(osignal.get());
         }
@@ -97,6 +109,17 @@ public class SignalController {
     }
 
 
+    @GetMapping("/{id}/starter")
+    public ResponseEntity<Signal> starterSignal(@PathVariable String id){
+
+        Optional<Signal> osignal = signalRepository.findById(id);
+
+        if (osignal.isPresent()){
+
+        }
+
+        return  ResponseEntity.noContent().build();
+    }
 
 
 }
