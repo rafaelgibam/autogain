@@ -10,16 +10,15 @@ import br.com.autogain.converter.OperationConverter;
 import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
-import br.com.autogain.dto.OperationDTO;
 import br.com.autogain.repository.EventMessageRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Time;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -32,6 +31,7 @@ public class IQOptionService implements EventListener {
     private EventMessageRepository eventMessageRepository;
 
     public String openOperation(IQOption iqOption, Operation operation) {
+        operation.setPrice(BigDecimal.valueOf(10));
         iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),

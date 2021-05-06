@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.SynchronousQueue;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -27,6 +29,7 @@ import br.com.autogain.consumer.iqoption.ws.request.Msg;
 import br.com.autogain.consumer.iqoption.ws.response.Candle;
 import br.com.autogain.domain.Balance;
 import br.com.autogain.consumer.iqoption.ws.response.ProfileRootMessage;
+import br.com.autogain.domain.EventMessage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -64,7 +67,9 @@ public class IQOption implements EventListener {
 	/**
 	 * Profile
 	 */
+	@Getter
 	private List<Balance> balances;
+	@Getter
 	private Long activeBalanceId;
 
 	/**
@@ -190,26 +195,108 @@ public class IQOption implements EventListener {
 	 * @param size - size in seconds of each candle  
 	 * @param active - id of the ticker
 	 */
-	@SneakyThrows
-	public synchronized List<Candle> getCandles(int count, long to, int size, Actives active ) {
-		CandleBody body = new CandleBody(count, to, size, active.getId());
-		webSocket.sendMessage(new BaseRequestMessage<Msg<CandleBody>>("sendMessage", "", new Msg<CandleBody>("get-candles", "2.0", body)));
+//	@SneakyThrows
+//	private Future<List<Candle>> getCandlesConverter(int count, long to, int size, Actives active ) {
+//		CandleBody body = new CandleBody(count, to, size, active.getId());
+//
+//		webSocket.sendMessage(new BaseRequestMessage<Msg<CandleBody>>("sendMessage", "", new Msg<CandleBody>("get-candles", "2.0", body)));
+//
+//		List<Message> messages = webSocket.getSyncMsgQueue().stream()
+//				.filter(message -> message.getName().equals("candles"))
+//				.collect(Collectors.toList());
+//		messages.sort(Comparator.comparing(m -> m.getTimeCreated().getTime()));
+//		Optional<Message> message = Optional.empty();
+//		if(!messages.isEmpty()) {
+//			 message = Optional.ofNullable(messages.get(messages.size()-1));
+//		}
+//		if (message.isPresent()) {
+//			JSONObject jsonObject = new JSONObject(message.get().getMsg());
+//			List<Candle> candles = new ObjectMapper().readValue(jsonObject.get("candles").toString(), new TypeReference<List<Candle>>(){});
+//			return CompletableFuture.completedFuture(candles);
+//		}
+//		return null;
+//	}
 
-		List<Message> messages = webSocket.getSyncMsgQueue().stream()
-				.filter(message -> message.getName().equals("candles"))
-				.collect(Collectors.toList());
-		messages.sort(Comparator.comparing(m -> m.getTimeCreated().getTime()));
-		Optional<Message> message = Optional.empty();
-		if(!messages.isEmpty()) {
-			 message = Optional.ofNullable(messages.get(messages.size()-1));
+	@SneakyThrows
+	public List<Candle> getCandles(int count, long to, int size, Actives active ) {
+		CandleBody body = new CandleBody(count, to, size, active.getId());
+		List<Candle> candles = new ArrayList<>();
+
+		while (true) {
+			webSocket.sendMessage(new BaseRequestMessage<Msg<CandleBody>>("sendMessage", "", new Msg<CandleBody>("get-candles", "2.0", body)));
+			if(this.isAuthenticated() && candles.isEmpty()) {
+				List<Message> messages = webSocket.getSyncMsgQueue().stream()
+					.filter(message -> message.getName().equals("candles"))
+					.collect(Collectors.toList());
+				messages.sort(Comparator.comparing(m -> m.getTimeCreated().getTime()));
+				Optional<Message> message = Optional.empty();
+
+				if(!messages.isEmpty()) {
+					message = Optional.ofNullable(messages.get(messages.size()-1));
+				}
+				if (message.isPresent()) {
+					JSONObject jsonObject = new JSONObject(message.get().getMsg());
+					candles = new ObjectMapper().readValue(jsonObject.get("candles").toString(), new TypeReference<List<Candle>>(){});
+				}
+			} if(!candles.isEmpty()) {
+				break;
+			}
 		}
-		if (message.isPresent()) {
-			JSONObject jsonObject = new JSONObject(message.get().getMsg());
-			List<Candle> candles = new ObjectMapper().readValue(jsonObject.get("candles").toString(), new TypeReference<List<Candle>>(){});
-			return candles;
-		}
-		return null;
+
+		return candles;
 	}
+
+	@SneakyThrows
+	public EventMessage getResultOperation() {
+		EventMessage eventMessage = null;
+		while(true) {
+			List<Message> messages = webSocket.getSyncMsgQueue().stream()
+					.filter(message -> message.getName().equals("option-closed"))
+					.collect(Collectors.toList());
+			messages.sort(Comparator.comparing(m -> m.getTimeCreated().getTime()));
+			Optional<Message> message = Optional.empty();
+			if(!messages.isEmpty()) {
+				message = Optional.ofNullable(messages.get(messages.size()-1));
+			}
+			if (message.isPresent()) {
+				JSONObject jsonObject = new JSONObject(message.get().getMsg());
+				eventMessage = new ObjectMapper().readValue(jsonObject.toString(), EventMessage.class);
+			}
+			if(eventMessage != null) {
+				break;
+			}
+		}
+		return eventMessage;
+	}
+
+//	@SneakyThrows
+//	public Future<EventMessage> getResultOperationConverter() {
+//		List<Message> messages = webSocket.getSyncMsgQueue().stream()
+//										  .filter(message -> message.getName().equals("option-closed"))
+//										   .collect(Collectors.toList());
+//		messages.sort(Comparator.comparing(m -> m.getTimeCreated().getTime()));
+//		Optional<Message> message = Optional.empty();
+//		if(!messages.isEmpty()) {
+//			message = Optional.ofNullable(messages.get(messages.size()-1));
+//		}
+//
+//		if (message.isPresent()) {
+//			JSONObject jsonObject = new JSONObject(message.get().getMsg());
+//			EventMessage eventMessage = new ObjectMapper().readValue(jsonObject.toString(), EventMessage.class);
+//			return CompletableFuture.completedFuture(eventMessage);
+//		}
+//		return null;
+//	}
+
+//	@SneakyThrows
+//	public EventMessage getResultOperation() {
+//		Future<EventMessage> eventMessage = this.getResultOperationConverter();
+//		if(eventMessage != null) {
+//			return eventMessage.get();
+//		} else {
+//			return this.getResultOperation();
+//		}
+//	}
 	
 	/**
 	 * !!Subscribe to Events.INITIALIZATION_DATA to get the response!!
@@ -231,10 +318,34 @@ public class IQOption implements EventListener {
 	 * @param active
 	 * @param duration
 	 */
-	public void buyBinary(Double price, BinaryBuyDirection direction, Actives active, int duration) {
+	@SneakyThrows
+	public EventMessage buyBinary(Double price, BinaryBuyDirection direction, Actives active, int duration) {
 		Long expiration = IQUtils.getExpiration(duration);
 		BinaryBuyRequest body = new BinaryBuyRequest(BinaryOptionId.getOptionIdByExpiration(duration).getId(), direction.getDirection(), price, this.activeBalanceId, expiration, active.getId());
-		webSocket.sendMessage(new BaseRequestMessage<Msg<BinaryBuyRequest>>("sendMessage", "buy", new Msg<BinaryBuyRequest>("binary-options.open-option", "1.0", body)));
+		EventMessage eventMessage = null;
+		while (true) {
+			webSocket.sendMessage(new BaseRequestMessage<Msg<BinaryBuyRequest>>("sendMessage", "buy", new Msg<BinaryBuyRequest>("binary-options.open-option", "1.0", body)));
+			List<Message> operationClosed = webSocket.getSyncMsgQueue().stream()
+					.filter(message -> message.getName().equals("socket-option-closed"))
+					.collect(Collectors.toList());
+
+			List<Message> messages = webSocket.getSyncMsgQueue().stream()
+					.filter(message -> message.getName().equals("option-closed"))
+					.collect(Collectors.toList());
+
+			Optional<Message> message = Optional.empty();
+			if(!messages.isEmpty()) {
+				message = Optional.ofNullable(messages.get(messages.size()-1));
+			}
+			if (message.isPresent()) {
+				JSONObject jsonObject = new JSONObject(message.get().getMsg());
+				eventMessage = new ObjectMapper().readValue(jsonObject.toString(), EventMessage.class);
+			}
+			if(!messages.isEmpty()) {
+				break;
+			}
+		}
+		return eventMessage;
 	}
 	
 	/*

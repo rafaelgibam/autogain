@@ -14,9 +14,9 @@ public class ManagementOperationService {
         return BigInteger.valueOf(calculatedMartinGale.intValue());
     }
 
-    public BigInteger calculateSoros(Double takeProfit, Integer payout) {
+    public BigInteger calculateSoros(Double price, Integer payout) {
         // valor_proxima_entrada = valor_entrada + ((valor_entrada * payout)/100)
-        Double calculatedSoros = Math.ceil(takeProfit + ((takeProfit * payout)/100));
+        Double calculatedSoros = Math.ceil(price + ((price * payout)/100));
         return  BigInteger.valueOf(calculatedSoros.intValue());
     }
 

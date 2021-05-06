@@ -45,26 +45,26 @@ public class EventManager {
 		Events ev = Events.get(message.getName());
 
 		if(ev == null) {
-//			logger.info("[EVENT] ignored: " + message.getName() + " " + originalMessage);
-			if(message.getName().equals("get-candles")) {
-				logger.info("[EVENT] ignored: " + message.getName() + " " + originalMessage);
-			}
-			if(message.getName().equals("option-opened")) {
-				logger.info("[EVENT] ignored: " + message.getName() + " Operação em andamento...");
-			}
-			if(message.getName().equals("option-closed")){
-				logger.info("[EVENT] ignored: " + message.getName() + " " + messageConverter.messageReturnOperation(originalMessage));
-				EventMessageRepository eventMessageRepository = ApplicationContextHolder.getContext().getBean(EventMessageRepository.class);
-				MessageRepository messageRepository = ApplicationContextHolder.getContext().getBean(MessageRepository.class);
-				EventMessage eventMessage = messageConverter.convertMessageToOperationResponse(message);
-				if(!eventMessageRepository.existsByIndex(eventMessage.getIndex())
-				   && eventMessage.getResult().equals("win")
-				   || eventMessage.getResult().equals("equal")
-				   || eventMessage.getResult().equals("loose")) {
-					eventMessageRepository.save(messageConverter.convertMessageToOperationResponse(message));
-					messageRepository.save(message);
-				}
-			}
+			logger.info("[EVENT] ignored: " + message.getName() + " " + originalMessage);
+//			if(message.getName().equals("get-candles")) {
+//				logger.info("[EVENT] ignored: " + message.getName() + " " + originalMessage);
+//			}
+//			if(message.getName().equals("option-opened")) {
+//				logger.info("[EVENT] ignored: " + message.getName() + " Operação em andamento...");
+//			}
+//			if(message.getName().equals("option-closed")){
+//				logger.info("[EVENT] ignored: " + message.getName() + " " + messageConverter.messageReturnOperation(originalMessage));
+//				EventMessageRepository eventMessageRepository = ApplicationContextHolder.getContext().getBean(EventMessageRepository.class);
+//				MessageRepository messageRepository = ApplicationContextHolder.getContext().getBean(MessageRepository.class);
+//				EventMessage eventMessage = messageConverter.convertMessageToOperationResponse(message);
+//				if(!eventMessageRepository.existsByIndex(eventMessage.getIndex())
+//				   && eventMessage.getResult().equals("win")
+//				   || eventMessage.getResult().equals("equal")
+//				   || eventMessage.getResult().equals("loose")) {
+//					eventMessageRepository.save(messageConverter.convertMessageToOperationResponse(message));
+//					messageRepository.save(message);
+//				}
+//			}
 			return;
 		}
 		logger.debug("[EVENT] not ignored: " + message.getName());

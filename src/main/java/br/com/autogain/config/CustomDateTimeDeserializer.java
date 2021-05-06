@@ -22,7 +22,8 @@ public class CustomDateTimeDeserializer extends StdDeserializer<DateTime> {
         super(t);
     }
 
-    @Override    public DateTime deserialize(JsonParser parser, DeserializationContext context)
+    @Override
+    public DateTime deserialize(JsonParser parser, DeserializationContext context)
             throws IOException, JsonProcessingException {
 
         String date = parser.getText();
