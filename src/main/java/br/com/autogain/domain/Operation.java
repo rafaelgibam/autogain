@@ -18,6 +18,9 @@ public class Operation {
     @Id
     private String id;
 
+    @JsonIgnore
+    private String signalId;
+
     @JsonProperty("expiration")
     private int expiration;
 
@@ -29,6 +32,8 @@ public class Operation {
 
     @JsonIgnore
     private BigDecimal price;
+
+
 
     @JsonProperty("entry_time")
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)

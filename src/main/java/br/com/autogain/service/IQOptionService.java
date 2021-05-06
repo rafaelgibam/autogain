@@ -11,6 +11,8 @@ import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.repository.EventMessageRepository;
+import br.com.autogain.repository.OperationRepository;
+import br.com.autogain.repository.SignalRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,10 @@ public class IQOptionService implements EventListener {
     private OperationConverter converter;
     @Autowired
     private EventMessageRepository eventMessageRepository;
+    @Autowired
+    private SignalRepository signalRepository;
+    @Autowired
+    private OperationRepository operationRepository;
 
     public String openOperation(IQOption iqOption, Operation operation) {
         operation.setPrice(BigDecimal.valueOf(10));
@@ -54,7 +60,10 @@ public class IQOptionService implements EventListener {
                 if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("hh:mm:ss"))) {
                     log.info("[API] - Opening operation active: ".concat(operation.getActive())
                             .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
+
+
                     openOperationWS(iqOption, operation);
+
                     break;
                 }
                 try {
@@ -104,6 +113,18 @@ public class IQOptionService implements EventListener {
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
                 operation.getExpiration());
+    }
+
+    private void updateOperations(Operation operation, Signal signal){
+
+        operation.setStatus(true);
+        operationRepository.save(operation);
+        signal.getOperations().stream().
+        signalRepository.save(signal);
+        operation.setPrice(signal.getConfigOperation().getPrice());
+
+
+
     }
 
     @Override
