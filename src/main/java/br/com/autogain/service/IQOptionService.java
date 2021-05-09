@@ -18,9 +18,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +49,13 @@ public class IQOptionService implements EventListener {
     public String openOperation(IQOption iqOption, Signal signal) {
         // "M5;AUDCAD;00:30:00;PUT"
 
-        signal.getOperations().stream().forEach(operation -> {
+        List<Operation> operations = signal.getOperations().stream().filter(operation -> !operation.getStatus()).collect(Collectors.toList());
+
+        if(!operations.isEmpty()){
+
+            if(){}
+
+        operations.stream().forEach(operation -> {
             DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
             String entryTimeWithDelayFormat = entryTimeWithDelay.toString("hh:mm:ss");
 
@@ -75,6 +79,7 @@ public class IQOptionService implements EventListener {
                 }
             }
         });
+        }
 
         return this.message;
     }

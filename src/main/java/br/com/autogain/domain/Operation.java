@@ -40,7 +40,7 @@ public class Operation {
     private DateTime entryTime;
 
     @JsonProperty("status")
-    private boolean status;
+    private Boolean status;
 
 
 }
