@@ -1,17 +1,0 @@
-
-Z
-java:S1128"8Remove this unused import 'java.util.stream.Collectors'.(Óóº´úÿÿÿÿ8¶­…¹/
-T
-java:S1128"7Remove this unused import 'org.apache.tomcat.jni.Time'.(¤¬âÏ8¶­…¹/
-k
-java:S11920"IDefine a constant instead of duplicating this literal "hh:mm:ss" 3 times.(ï¤ÛÅøÿÿÿÿ8¶­…¹/
-M
-java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8¶­…¹/
-c
-java:S2142>"FEither re-interrupt this method or rethrow the "InterruptedException".(ä ¹€8¶­…¹/
-Y
-java:S3655H"7Call "Optional#isPresent()" before accessing the value.(ıÁ²½úÿÿÿÿ8Ú¡èµ‘/
-_
-java:S1128"=Remove this unused import 'br.com.autogain.dto.OperationDTO'.(Ì‚íûÿÿÿÿ8¶­…¹/
-X
-java:S1144G"6Remove this unused private "openAutoOperation" method.(ßâúÿÿÿÿ8¶­…¹/
