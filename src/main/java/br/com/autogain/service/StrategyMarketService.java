@@ -2,12 +2,8 @@ package br.com.autogain.service;
 
 import br.com.autogain.consumer.iqoption.IQOption;
 import br.com.autogain.consumer.iqoption.enums.Actives;
-import br.com.autogain.consumer.iqoption.utils.IQUtils;
 import br.com.autogain.consumer.iqoption.ws.response.Candle;
-import br.com.autogain.converter.OperationConverter;
 import br.com.autogain.domain.Operation;
-import br.com.autogain.repository.OperationRepository;
-import com.ea.async.Async;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

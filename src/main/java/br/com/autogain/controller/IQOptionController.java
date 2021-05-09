@@ -3,6 +3,7 @@ package br.com.autogain.controller;
 
 import br.com.autogain.consumer.iqoption.IQOption;
 import br.com.autogain.converter.OperationConverter;
+import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
 import br.com.autogain.domain.User;
@@ -56,10 +57,10 @@ public class IQOptionController {
     }
 
     @PostMapping("/operations")
-    public ResponseEntity<String> openOperation(
+    public ResponseEntity<EventMessage> openOperation(
             @RequestBody Operation operation
             ) {
-        String resultMessage = iqOptionService.openOperation(iqOption, operation);
+        EventMessage resultMessage = iqOptionService.openOperation(iqOption, operation);
         return ResponseEntity.ok(resultMessage);
     }
 
