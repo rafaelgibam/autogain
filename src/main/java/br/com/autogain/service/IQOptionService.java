@@ -6,10 +6,13 @@ import br.com.autogain.consumer.iqoption.enums.BinaryBuyDirection;
 import br.com.autogain.consumer.iqoption.enums.TimeFrame;
 import br.com.autogain.consumer.iqoption.event.EventListener;
 import br.com.autogain.consumer.iqoption.event.Events;
+import br.com.autogain.converter.MessageConverter;
 import br.com.autogain.converter.OperationConverter;
+import br.com.autogain.domain.ConfigOperation;
 import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
+import br.com.autogain.repository.ConfigOperationRepository;
 import br.com.autogain.repository.EventMessageRepository;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.repository.SignalRepository;
@@ -35,6 +38,8 @@ public class IQOptionService implements EventListener {
     private SignalRepository signalRepository;
     @Autowired
     private OperationRepository operationRepository;
+    @Autowired
+    private MessageConverter messageConverter;
 
     public EventMessage openOperation(IQOption iqOption, Operation operation) {
         operation.setPrice(BigDecimal.valueOf(10));
@@ -48,35 +53,56 @@ public class IQOptionService implements EventListener {
     public String openOperation(IQOption iqOption, Signal signal) {
         // "M5;AUDCAD;00:30:00;PUT"
 
+        BigDecimal take = BigDecimal.ZERO;
+        BigDecimal stop = BigDecimal.ZERO;
+
         List<Operation> operations = signal.getOperations().stream().filter(operation -> !operation.getStatus()).collect(Collectors.toList());
 
         if(!operations.isEmpty()){
 
-        operations.stream().forEach(operation -> {
-            DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
-            String entryTimeWithDelayFormat = entryTimeWithDelay.toString("HH:mm:ss");
+            for (Operation operation : operations){
+                DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
+                String entryTimeWithDelayFormat = entryTimeWithDelay.toString("HH:mm:ss");
 
-            while (true) {
-                log.info("[API] - Awaiting signal to open operation: " + entryTimeWithDelayFormat +
-                        " - Minutes: " +  new DateTime().minusSeconds(1).toString("HH:mm:ss"));
+                 if(take.equals(signal.getConfigOperation().getTake())){
 
-                if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("HH:mm:ss"))) {
-                    log.info("[API] - Opening operation active: ".concat(operation.getActive())
-                            .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
+                     break;
+                 }
+                 if(stop.equals(signal.getConfigOperation().getStop())){
 
-                    updateOperations(operation, signal);
-                    openOperationWS(iqOption, operation);
+                     break;
+                 }
 
-                    break;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while (true) {
+                    log.info("[API] - Awaiting signal to open operation: " + entryTimeWithDelayFormat +
+                            " - Minutes: " +  new DateTime().minusSeconds(1).toString("HH:mm:ss"));
+
+                    if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("HH:mm:ss"))) {
+                        log.info("[API] - Opening operation active: ".concat(operation.getActive())
+                                .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
+
+                        updateOperations(operation, signal);
+                       EventMessage eventMessage = openOperation(iqOption, operation);
+
+                       if(eventMessage.getResult().equals("win")){
+                          take.add(messageConverter.calculateProfit(eventMessage));
+                       }
+                       if(eventMessage.getResult().equals("loose")){
+                           stop.add(messageConverter.calculateProfit(eventMessage));
+                        }
+
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        });
+
         }
+
+
 
         return this.message;
     }
@@ -111,7 +137,7 @@ public class IQOptionService implements EventListener {
         }
     }
 
-
+    @Deprecated
     private void openOperationWS(IQOption iqOption, Operation operation) {
         iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
