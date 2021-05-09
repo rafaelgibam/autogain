@@ -34,6 +34,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,8 +219,8 @@ public class IQOption implements EventListener {
 //	}
 
 	@SneakyThrows
-	public List<Candle> getCandles(int count, long to, int size, Actives active ) {
-		CandleBody body = new CandleBody(count, to, size, active.getId());
+	public List<Candle> getCandles(int count, DateTime to, int size, Actives active ) {
+		CandleBody body = new CandleBody(count, to.toDateTime().getMillis(), size, active.getId());
 		List<Candle> candles = new ArrayList<>();
 
 		while (true) {
@@ -323,28 +324,20 @@ public class IQOption implements EventListener {
 		Long expiration = IQUtils.getExpiration(duration);
 		BinaryBuyRequest body = new BinaryBuyRequest(BinaryOptionId.getOptionIdByExpiration(duration).getId(), direction.getDirection(), price, this.activeBalanceId, expiration, active.getId());
 		EventMessage eventMessage = null;
-		while (true) {
-			webSocket.sendMessage(new BaseRequestMessage<Msg<BinaryBuyRequest>>("sendMessage", "buy", new Msg<BinaryBuyRequest>("binary-options.open-option", "1.0", body)));
-			List<Message> operationClosed = webSocket.getSyncMsgQueue().stream()
-					.filter(message -> message.getName().equals("socket-option-closed"))
-					.collect(Collectors.toList());
+		webSocket.sendMessage(new BaseRequestMessage<Msg<BinaryBuyRequest>>("sendMessage", "buy", new Msg<BinaryBuyRequest>("binary-options.open-option", "1.0", body)));
 
-			List<Message> messages = webSocket.getSyncMsgQueue().stream()
+		while (true) {
+			List<Message> operationClosed = this.getWebSocket().getSyncMsgQueue().stream()
 					.filter(message -> message.getName().equals("option-closed"))
 					.collect(Collectors.toList());
 
-			Optional<Message> message = Optional.empty();
-			if(!messages.isEmpty()) {
-				message = Optional.ofNullable(messages.get(messages.size()-1));
-			}
-			if (message.isPresent()) {
-				JSONObject jsonObject = new JSONObject(message.get().getMsg());
+			if (!operationClosed.isEmpty()) {
+				JSONObject jsonObject = new JSONObject(operationClosed.get(0).getMsg());
 				eventMessage = new ObjectMapper().readValue(jsonObject.toString(), EventMessage.class);
-			}
-			if(!messages.isEmpty()) {
 				break;
 			}
 		}
+
 		return eventMessage;
 	}
 	

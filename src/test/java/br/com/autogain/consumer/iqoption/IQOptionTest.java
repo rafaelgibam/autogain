@@ -44,15 +44,15 @@ public class IQOptionTest {
             Long expiration = IQUtils.getExpiration(1);
             BinaryBuyRequest body = new BinaryBuyRequest(BinaryOptionId.getOptionIdByExpiration(1).getId(), BinaryBuyDirection.CALL.getDirection(), 10.0, this.iqOption.getActiveBalanceId(), expiration, Actives.EURUSD.getId());
             EventMessage eventMessage = null;
-//            while (true) {
-//                iqOption.getWebSocket().sendMessage(new BaseRequestMessage<Msg<BinaryBuyRequest>>("sendMessage", "buy", new Msg<BinaryBuyRequest>("binary-options.open-option", "1.0", body)));
-//                List<Message> operationClosed = iqOption.getWebSocket().getSyncMsgQueue().stream()
-//                        .filter(message -> message.getName().equals("option-closed"))
-//                        .collect(Collectors.toList());
-//                if(!operationClosed.isEmpty()) {
-//                    break;
-//                }
-//            }
+            iqOption.getWebSocket().sendMessage(new BaseRequestMessage<Msg<BinaryBuyRequest>>("sendMessage", "buy", new Msg<BinaryBuyRequest>("binary-options.open-option", "1.0", body)));
+            while (true) {
+                List<Message> operationClosed = iqOption.getWebSocket().getSyncMsgQueue().stream()
+                        .filter(message -> message.getName().equals("option-closed"))
+                        .collect(Collectors.toList());
+                if(!operationClosed.isEmpty()) {
+                    break;
+                }
+            }
         }
 
 //            List<Message> messages =  iqOption.getWebSocket().getSyncMsgQueue().stream()

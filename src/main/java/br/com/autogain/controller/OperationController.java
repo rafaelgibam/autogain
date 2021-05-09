@@ -100,8 +100,8 @@ public class OperationController {
     }
 
     @GetMapping("/start")
-    public ResponseEntity<Integer> startAutoOperation() {
-        return ResponseEntity.ok(strategyMarketService.getCandleBackTrend(Actives.EURUSD, 1));
+    public ResponseEntity<Candle> startAutoOperation() {
+        return ResponseEntity.ok(strategyMarketService.getCandleBackTrend(Actives.EURUSD_OTC, 1));
 //        return ResponseEntity.ok("Auto Operação Iniciada com Sucesso!");
     }
 

@@ -36,13 +36,12 @@ public class IQOptionService implements EventListener {
     @Autowired
     private OperationRepository operationRepository;
 
-    public String openOperation(IQOption iqOption, Operation operation) {
+    public EventMessage openOperation(IQOption iqOption, Operation operation) {
         operation.setPrice(BigDecimal.valueOf(10));
-        iqOption.buyBinary(operation.getPrice().doubleValue(),
+        return iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
                 operation.getExpiration());
-        return this.message;
     }
 
 
@@ -117,13 +116,11 @@ public class IQOptionService implements EventListener {
 
     private void updateOperations(Operation operation, Signal signal){
 
-        operation.setStatus(true);
-        operationRepository.save(operation);
-        signal.getOperations().stream().
-        signalRepository.save(signal);
-        operation.setPrice(signal.getConfigOperation().getPrice());
-
-
+//        operation.setStatus(true);
+//        operationRepository.save(operation);
+//        signal.getOperations().stream().
+//        signalRepository.save(signal);
+//        operation.setPrice(signal.getConfigOperation().getPrice());
 
     }
 
