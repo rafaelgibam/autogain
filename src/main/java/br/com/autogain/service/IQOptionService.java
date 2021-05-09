@@ -52,17 +52,15 @@ public class IQOptionService implements EventListener {
 
         if(!operations.isEmpty()){
 
-            if(){}
-
         operations.stream().forEach(operation -> {
             DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
-            String entryTimeWithDelayFormat = entryTimeWithDelay.toString("hh:mm:ss");
+            String entryTimeWithDelayFormat = entryTimeWithDelay.toString("HH:mm:ss");
 
             while (true) {
                 log.info("[API] - Awaiting signal to open operation: " + entryTimeWithDelayFormat +
-                        " - Minutes: " +  new DateTime().minusSeconds(1).toString("hh:mm:ss"));
+                        " - Minutes: " +  new DateTime().minusSeconds(1).toString("HH:mm:ss"));
 
-                if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("hh:mm:ss"))) {
+                if(entryTimeWithDelayFormat.equals(new DateTime().minusSeconds(1).toString("HH:mm:ss"))) {
                     log.info("[API] - Opening operation active: ".concat(operation.getActive())
                             .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
 
