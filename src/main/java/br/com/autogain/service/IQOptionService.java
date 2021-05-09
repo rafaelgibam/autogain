@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,7 +63,7 @@ public class IQOptionService implements EventListener {
                     log.info("[API] - Opening operation active: ".concat(operation.getActive())
                             .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
 
-
+                    updateOperations(operation, signal);
                     openOperationWS(iqOption, operation);
 
                     break;
@@ -119,12 +121,17 @@ public class IQOptionService implements EventListener {
 
         operation.setStatus(true);
         operationRepository.save(operation);
-        signal.getOperations().stream().
+
+        List<Operation> listOperations =  signal.getOperations().stream().map(operation1 -> {
+            if(operation1.getId().equals(operation.getId())){
+                operation1.setStatus(true);
+                return operation1;
+            }
+            return operation1;
+        }).collect(Collectors.toList());
+        signal.setOperations(listOperations);
         signalRepository.save(signal);
         operation.setPrice(signal.getConfigOperation().getPrice());
-
-
-
     }
 
     @Override

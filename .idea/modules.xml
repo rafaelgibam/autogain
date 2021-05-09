@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../apphamburgueria/apphamburgueria.iml" filepath="$PROJECT_DIR$/../apphamburgueria/apphamburgueria.iml" />
       <module fileurl="file://$PROJECT_DIR$/autogain.iml" filepath="$PROJECT_DIR$/autogain.iml" />
     </modules>
   </component>
