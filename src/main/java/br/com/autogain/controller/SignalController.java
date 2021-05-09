@@ -111,15 +111,10 @@ public class SignalController {
 
     @GetMapping("/{id}/starter")
     public ResponseEntity<Signal> starterSignal(@PathVariable String id){
-
         Optional<Signal> osignal = signalRepository.findById(id);
-
         if (osignal.isPresent()){
-
+            iqOptionService.openOperation(iqOption, osignal.get());
         }
-
         return  ResponseEntity.noContent().build();
     }
-
-
 }

@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,12 +38,13 @@ public class IQOptionService implements EventListener {
     @Autowired
     private OperationRepository operationRepository;
 
-    public EventMessage openOperation(IQOption iqOption, Operation operation) {
+    public String openOperation(IQOption iqOption, Operation operation) {
         operation.setPrice(BigDecimal.valueOf(10));
-        return iqOption.buyBinary(operation.getPrice().doubleValue(),
+        iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
                 operation.getExpiration());
+        return this.message;
     }
 
 
@@ -60,7 +63,7 @@ public class IQOptionService implements EventListener {
                     log.info("[API] - Opening operation active: ".concat(operation.getActive())
                             .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
 
-
+                    updateOperations(operation, signal);
                     openOperationWS(iqOption, operation);
 
                     break;
@@ -116,12 +119,19 @@ public class IQOptionService implements EventListener {
 
     private void updateOperations(Operation operation, Signal signal){
 
-//        operation.setStatus(true);
-//        operationRepository.save(operation);
-//        signal.getOperations().stream().
-//        signalRepository.save(signal);
-//        operation.setPrice(signal.getConfigOperation().getPrice());
+        operation.setStatus(true);
+        operationRepository.save(operation);
 
+        List<Operation> listOperations =  signal.getOperations().stream().map(operation1 -> {
+            if(operation1.getId().equals(operation.getId())){
+                operation1.setStatus(true);
+                return operation1;
+            }
+            return operation1;
+        }).collect(Collectors.toList());
+        signal.setOperations(listOperations);
+        signalRepository.save(signal);
+        operation.setPrice(signal.getConfigOperation().getPrice());
     }
 
     @Override

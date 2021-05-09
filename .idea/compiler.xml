@@ -8,14 +8,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="autogain" />
+        <module name="apphamburgueria" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="apphamburgueria" target="1.8" />
       <module name="autogain" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="apphamburgueria" options="-parameters" />
       <module name="autogain" options="-parameters" />
     </option>
   </component>
