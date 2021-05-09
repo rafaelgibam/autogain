@@ -120,7 +120,7 @@ public class Candle {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
 	public CandleDirection getDirection() {
 		if(getClose() > getOpen()) {
 			return CandleDirection.UP;

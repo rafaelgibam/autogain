@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -38,13 +36,12 @@ public class IQOptionService implements EventListener {
     @Autowired
     private OperationRepository operationRepository;
 
-    public String openOperation(IQOption iqOption, Operation operation) {
+    public EventMessage openOperation(IQOption iqOption, Operation operation) {
         operation.setPrice(BigDecimal.valueOf(10));
-        iqOption.buyBinary(operation.getPrice().doubleValue(),
+        return iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
                 operation.getExpiration());
-        return this.message;
     }
 
 

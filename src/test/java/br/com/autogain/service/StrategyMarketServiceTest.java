@@ -3,7 +3,6 @@ package br.com.autogain.service;
 import br.com.autogain.consumer.iqoption.IQOption;
 import br.com.autogain.consumer.iqoption.enums.Actives;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class StrategyMarketServiceTest {
 
     @Test
     public void getCandleBackTrend() {
-        iqOption.getCandles(1, new DateTime(), 60, Actives.EURUSD_OTC);
+        iqOption.getCandles(1, 1, 60, Actives.EURUSD_OTC);
 
     }
 
