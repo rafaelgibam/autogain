@@ -75,4 +75,5 @@ public class MessageConverter {
     public String calculateProfitMessage(Message message, EventMessage eventMessage) {
         return  message.getName().equals("option-archived") ? " " : this.calculateProfit(eventMessage).toString();
     }
+
 }

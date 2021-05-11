@@ -6,6 +6,7 @@ import br.com.autogain.consumer.iqoption.enums.BinaryBuyDirection;
 import br.com.autogain.consumer.iqoption.enums.TimeFrame;
 import br.com.autogain.consumer.iqoption.event.EventListener;
 import br.com.autogain.consumer.iqoption.event.Events;
+import br.com.autogain.converter.MessageConverter;
 import br.com.autogain.converter.OperationConverter;
 import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
@@ -35,9 +36,11 @@ public class IQOptionService implements EventListener {
     private SignalRepository signalRepository;
     @Autowired
     private OperationRepository operationRepository;
+    @Autowired
+    private MessageConverter messageConverter;
 
     public EventMessage openOperation(IQOption iqOption, Operation operation) {
-        operation.setPrice(BigDecimal.valueOf(10));
+        operation.setPrice(BigDecimal.valueOf(2));
         return iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
@@ -65,7 +68,7 @@ public class IQOptionService implements EventListener {
                             .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
 
                     updateOperations(operation, signal);
-                    openOperationWS(iqOption, operation);
+                    openOperation(iqOption, operation);
 
                     break;
                 }
@@ -81,43 +84,88 @@ public class IQOptionService implements EventListener {
         return this.message;
     }
 
-    private void openAutoOperation(IQOption iqOption, Operation operation) {
-        EventMessage eventMessage = eventMessageRepository.findAll(Sort.by(Sort.Direction.ASC, "open_time_millisecond"))
-                            .stream().findFirst().get();
-        if(eventMessage.getResult().equals("loose") && eventMessage.getDirection().equals("call")) {
-            operation.setDirection("put");
-            openOperation(iqOption, operation);
-        }
-        if(eventMessage.getResult().equals("win") && eventMessage.getDirection().equals("call")) {
-            operation.setDirection("call");
-            openOperation(iqOption, operation);
-        }
-        if(eventMessage.getResult().equals("equal") && eventMessage.getDirection().equals("call")) {
-            operation.setDirection("call");
-            openOperation(iqOption, operation);
-        }
+    public void openAutoOperation(IQOption iqOption, Operation operation, EventMessage eventMessage) {
+        BigDecimal stop = BigDecimal.ZERO;
+        EventMessage eventMessageRecursive = eventMessage;
 
-        if(eventMessage.getResult().equals("loose") && eventMessage.getDirection().equals("put")) {
-            operation.setDirection("call");
-            openOperation(iqOption, operation);
-        }
-        if(eventMessage.getResult().equals("win") && eventMessage.getDirection().equals("put")) {
-            operation.setDirection("put");
-            openOperation(iqOption, operation);
-        }
-        if(eventMessage.getResult().equals("equal") && eventMessage.getDirection().equals("put")) {
-            operation.setDirection("put");
-            openOperation(iqOption, operation);
+        while (true) {
+            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("call")) {
+                operation.setDirection("PUT");
+                eventMessageRecursive = openOperation(iqOption, operation);
+                stop.add(messageConverter.calculateProfit(eventMessageRecursive));
+            }
+            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("call")) {
+                operation.setDirection("CALL");
+                eventMessageRecursive = openOperation(iqOption, operation);
+            }
+            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("call")) {
+                operation.setDirection("CALL");
+                eventMessageRecursive = openOperation(iqOption, operation);
+            }
+            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("put")) {
+                operation.setDirection("CALL");
+                eventMessageRecursive = openOperation(iqOption, operation);
+                stop.add(messageConverter.calculateProfit(eventMessageRecursive));
+            }
+            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("put")) {
+                operation.setDirection("PUT");
+                eventMessageRecursive = openOperation(iqOption, operation);
+            }
+            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("put")) {
+                operation.setDirection("PUT");
+                eventMessageRecursive = openOperation(iqOption, operation);
+            }
+            if(eventMessageRecursive != null) {
+                if(stop.equals(20)) {
+                    break;
+                } else {
+                    openAutoOperation(iqOption, operation, eventMessageRecursive);
+                }
+            }
         }
     }
 
 
-    private void openOperationWS(IQOption iqOption, Operation operation) {
-        iqOption.buyBinary(operation.getPrice().doubleValue(),
-                BinaryBuyDirection.valueOf(operation.getDirection()),
-                Actives.valueOf(operation.getActive()),
-                operation.getExpiration());
-    }
+//    public void openAutoOperation(IQOption iqOption, Operation operation, EventMessage eventMessage) {
+//        BigDecimal stop = BigDecimal.ZERO;
+//        EventMessage eventMessageRecursive = eventMessage;
+//
+//        while (true) {
+//            eventMessageRecursive = openOperation(iqOption, operation);
+//            if(iqOption.verifyResult(eventMessageRecursive)) {
+//
+//            }
+//            stop.add(messageConverter.calculateProfit(eventMessageRecursive));
+//            break;
+//        }
+//
+//        if(!stop.equals(20)) {
+//            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("call")) {
+//                operation.setDirection("PUT");
+//                openAutoOperation(iqOption, operation, eventMessageRecursive);
+//            }
+//            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("call")) {
+//                operation.setDirection("CALL");
+//                openAutoOperation(iqOption, operation, eventMessageRecursive);
+//            }
+//            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("call")) {
+//                operation.setDirection("CALL");
+//                openAutoOperation(iqOption, operation, eventMessageRecursive);
+//            }
+//            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("put")) {
+//                operation.setDirection("CALL");
+//                openAutoOperation(iqOption, operation, eventMessageRecursive);
+//            }
+//            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("put")) {
+//                operation.setDirection("PUT");
+//                openAutoOperation(iqOption, operation, eventMessageRecursive);
+//            }
+//            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("put")) {
+//                operation.setDirection("PUT");
+//                openAutoOperation(iqOption, operation, eventMessageRecursive);
+//            }
+//        }
+//    }
 
     private void updateOperations(Operation operation, Signal signal){
 

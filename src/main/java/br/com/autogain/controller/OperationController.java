@@ -6,6 +6,7 @@ import br.com.autogain.consumer.iqoption.ws.message.Message;
 import br.com.autogain.consumer.iqoption.ws.response.Candle;
 import br.com.autogain.domain.ConfigOperation;
 import br.com.autogain.domain.Operation;
+import br.com.autogain.dto.RequestAutoOperation;
 import br.com.autogain.repository.ConfigOperationRepository;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.service.IQOptionService;
@@ -99,10 +100,13 @@ public class OperationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<Integer> startAutoOperation() {
-        return ResponseEntity.ok(strategyMarketService.getCandleBackTrend(Actives.EURUSD, 1));
-//        return ResponseEntity.ok("Auto Operação Iniciada com Sucesso!");
+    @GetMapping("/config/{id}/starter")
+    public ResponseEntity<Integer> startAutoOperation(@PathVariable String id, @RequestBody RequestAutoOperation requestAutoOperation) {
+        Optional<ConfigOperation> configOperation = configOperationRepository.findById(id);
+        if(configOperation.isPresent()) {
+            return ResponseEntity.ok(strategyMarketService.getCandleBackTrend(requestAutoOperation, configOperation.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
 
 

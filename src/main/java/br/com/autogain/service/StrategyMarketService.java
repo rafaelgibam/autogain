@@ -3,7 +3,10 @@ package br.com.autogain.service;
 import br.com.autogain.consumer.iqoption.IQOption;
 import br.com.autogain.consumer.iqoption.enums.Actives;
 import br.com.autogain.consumer.iqoption.ws.response.Candle;
+import br.com.autogain.domain.ConfigOperation;
+import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
+import br.com.autogain.dto.RequestAutoOperation;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,46 +30,23 @@ public class StrategyMarketService {
     public void BBWithEMA() { }
 
     @SneakyThrows
-    public int getCandleBackTrend(Actives actives, int timeFrame) {
-        int perdeu = 0;
-
+    public int getCandleBackTrend(RequestAutoOperation requestAutoOperation, ConfigOperation configOperation) {
+        BigDecimal stop = BigDecimal.ZERO;
+        Candle candle = iqOption.getCandles(1, new Date().getTime(), requestAutoOperation.getExpiration(), Actives.valueOf(requestAutoOperation.getActive())).get(0);
         log.info("Iniciando operação automática...");
-        while (true) {
-            Candle candle = iqOption.getCandles(1, new Date().getTime(), timeFrame, actives).get(0);
-            if(candle.getDirection().name().equals("DOWN")) {
-                log.info("Realizando entrada de VENDA...");
-                Operation operation = Operation.builder()
-                                                .direction("PUT")
-                                                .active(actives.name())
-                                                .expiration(timeFrame)
-                                                .price(BigDecimal.valueOf(5))
-                                               .build();
-                iqOptionService.openOperation(iqOption, operation);
-                if(iqOption.getResultOperation().getResult().equals("loose")){
-                    log.info("Resultado da operação foi LOSS");
-                    perdeu++;
-                }
-            }
-            if(candle.getDirection().name().equals("UP")){
-                log.info("Realizando entrada de COMPRA...");
-                Operation operation = Operation.builder()
-                        .direction("CALL")
-                        .active(actives.name())
-                        .expiration(timeFrame)
-                        .price(BigDecimal.valueOf(5))
-                        .build();
-                iqOptionService.openOperation(iqOption, operation);
-                if(iqOption.getResultOperation().getResult().equals("loose")){
-                    log.info("Resultado da operação foi LOSS");
-                    perdeu++;
-                }
-            }
+        Operation operation = Operation.builder()
+                .direction(candle.getDirection().name().equals("UP") ? "CALL" : "PUT")
+                .active(requestAutoOperation.getActive())
+                .expiration(requestAutoOperation.getExpiration())
+                .price(configOperation.getPrice())
+                .build();
 
-            if(perdeu == 10) {
-                break;
-            }
+        EventMessage eventMessage = iqOptionService.openOperation(iqOption, operation);
+        if(eventMessage.getResult() != null) {
+            iqOptionService.openAutoOperation(iqOption, operation, eventMessage);
         }
-        return perdeu;
+
+        return 1;
     }
 
     public void MHI() {
