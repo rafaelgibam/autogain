@@ -93,6 +93,7 @@ public class IQOptionService implements EventListener {
                     break;
                 }
                 try {
+
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
