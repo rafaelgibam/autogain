@@ -64,12 +64,12 @@ public class IQOptionService implements EventListener {
             DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
             String entryTimeWithDelayFormat = entryTimeWithDelay.toString("HH:mm:ss");
 
-            if(signal.getConfigOperation().getTake().equals(take)){
+            if(take.doubleValue() >= signal.getConfigOperation().getTake().doubleValue()){
 
                 log.info("Parabéns você bateu a meta!");
                 break;
             }
-            if(signal.getConfigOperation().getStop().equals(stop)){
+            if(stop.doubleValue() >= signal.getConfigOperation().getStop().doubleValue()){
                 log.info("Você foi Stopado");
                 break;
             }
@@ -85,10 +85,10 @@ public class IQOptionService implements EventListener {
                     EventMessage eventMessage = openOperation(iqOption, operation);
 
                     if(eventMessage.getResult().equals("win")){
-                        take.add(messageConverter.calculateProfit(eventMessage));
+                          take = take.add(messageConverter.calculateProfit(eventMessage));
                     }
                     if(eventMessage.getResult().equals("loose")){
-                        stop.add(signal.getConfigOperation().getPrice());
+                          stop = stop.add(signal.getConfigOperation().getPrice());
                     }
                     break;
                 }
