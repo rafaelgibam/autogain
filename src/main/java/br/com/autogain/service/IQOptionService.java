@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,6 @@ public class IQOptionService implements EventListener {
     private MessageConverter messageConverter;
 
     public EventMessage openOperation(IQOption iqOption, Operation operation) {
-        operation.setPrice(BigDecimal.valueOf(2));
         return iqOption.buyBinary(operation.getPrice().doubleValue(),
                 BinaryBuyDirection.valueOf(operation.getDirection()),
                 Actives.valueOf(operation.getActive()),
@@ -50,15 +50,29 @@ public class IQOptionService implements EventListener {
 
     public String openOperation(IQOption iqOption, Signal signal) {
         // "M5;AUDCAD;00:30:00;PUT"
+        BigDecimal take = BigDecimal.ZERO;
+        BigDecimal stop = BigDecimal.ZERO;
 
-        List<Operation> operations = signal.getOperations().stream().filter(operation -> !operation.getStatus()).collect(Collectors.toList());
+        List<Operation> operations
+                = signal.getOperations().stream().sorted(Comparator.comparing(Operation::getEntryTime))
+                  .filter(operation -> !operation.getStatus())
+                  .collect(Collectors.toList());
 
         if(!operations.isEmpty()){
 
-        operations.stream().forEach(operation -> {
+         for(Operation operation : operations){
             DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
             String entryTimeWithDelayFormat = entryTimeWithDelay.toString("HH:mm:ss");
 
+            if(take.doubleValue() >= signal.getConfigOperation().getTake().doubleValue()){
+
+                log.info("Parabéns você bateu a meta!");
+                break;
+            }
+            if(stop.doubleValue() >= signal.getConfigOperation().getStop().doubleValue()){
+                log.info("Você foi Stopado");
+                break;
+            }
             while (true) {
                 log.info("[API] - Awaiting signal to open operation: " + entryTimeWithDelayFormat +
                         " - Minutes: " +  new DateTime().minusSeconds(1).toString("HH:mm:ss"));
@@ -68,17 +82,24 @@ public class IQOptionService implements EventListener {
                             .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
 
                     updateOperations(operation, signal);
-                    openOperation(iqOption, operation);
+                    EventMessage eventMessage = openOperation(iqOption, operation);
 
+                    if(eventMessage.getResult().equals("win")){
+                          take = take.add(messageConverter.calculateProfit(eventMessage));
+                    }
+                    if(eventMessage.getResult().equals("loose")){
+                          stop = stop.add(signal.getConfigOperation().getPrice());
+                    }
                     break;
                 }
                 try {
+
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        });
+        }
         }
 
         return this.message;
