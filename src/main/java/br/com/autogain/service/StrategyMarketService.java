@@ -32,6 +32,7 @@ public class StrategyMarketService {
     @SneakyThrows
     public int getCandleBackTrend(RequestAutoOperation requestAutoOperation, ConfigOperation configOperation) {
         BigDecimal stop = BigDecimal.ZERO;
+        BigDecimal take = BigDecimal.ZERO;
         Candle candle = iqOption.getCandles(1, new Date().getTime(), requestAutoOperation.getExpiration(), Actives.valueOf(requestAutoOperation.getActive())).get(0);
         log.info("Iniciando operação automática...");
         Operation operation = Operation.builder()
@@ -43,7 +44,10 @@ public class StrategyMarketService {
 
         EventMessage eventMessage = iqOptionService.openOperation(iqOption, operation);
         if(eventMessage.getResult() != null) {
-            iqOptionService.openAutoOperation(iqOption, operation, eventMessage);
+
+            iqOptionService.openAutoTrend(iqOption, operation, eventMessage, configOperation);
+
+
         }
 
         return 1;

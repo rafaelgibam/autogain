@@ -8,6 +8,7 @@ import br.com.autogain.consumer.iqoption.event.EventListener;
 import br.com.autogain.consumer.iqoption.event.Events;
 import br.com.autogain.converter.MessageConverter;
 import br.com.autogain.converter.OperationConverter;
+import br.com.autogain.domain.ConfigOperation;
 import br.com.autogain.domain.EventMessage;
 import br.com.autogain.domain.Operation;
 import br.com.autogain.domain.Signal;
@@ -105,8 +106,9 @@ public class IQOptionService implements EventListener {
         return this.message;
     }
 
-    public void openAutoOperation(IQOption iqOption, Operation operation, EventMessage eventMessage) {
+    public void openAutoTrend(IQOption iqOption, Operation operation, EventMessage eventMessage, ConfigOperation configOperation) {
         BigDecimal stop = BigDecimal.ZERO;
+        BigDecimal take = BigDecimal.ZERO;
         EventMessage eventMessageRecursive = eventMessage;
 
         while (true) {
@@ -137,57 +139,17 @@ public class IQOptionService implements EventListener {
                 eventMessageRecursive = openOperation(iqOption, operation);
             }
             if(eventMessageRecursive != null) {
-                if(stop.equals(20)) {
+                if(stop.equals(configOperation.getStop())) {
                     break;
-                } else {
-                    openAutoOperation(iqOption, operation, eventMessageRecursive);
+                }if(take.equals(configOperation.getTake())){
+                    break;
+                }
+                 else {
+                    openAutoTrend(iqOption, operation, eventMessageRecursive, configOperation);
                 }
             }
         }
     }
-
-
-//    public void openAutoOperation(IQOption iqOption, Operation operation, EventMessage eventMessage) {
-//        BigDecimal stop = BigDecimal.ZERO;
-//        EventMessage eventMessageRecursive = eventMessage;
-//
-//        while (true) {
-//            eventMessageRecursive = openOperation(iqOption, operation);
-//            if(iqOption.verifyResult(eventMessageRecursive)) {
-//
-//            }
-//            stop.add(messageConverter.calculateProfit(eventMessageRecursive));
-//            break;
-//        }
-//
-//        if(!stop.equals(20)) {
-//            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("call")) {
-//                operation.setDirection("PUT");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("call")) {
-//                operation.setDirection("CALL");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("call")) {
-//                operation.setDirection("CALL");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("put")) {
-//                operation.setDirection("CALL");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("put")) {
-//                operation.setDirection("PUT");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("put")) {
-//                operation.setDirection("PUT");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//        }
-//    }
-
     private void updateOperations(Operation operation, Signal signal){
 
         operation.setStatus(true);

@@ -8,8 +8,6 @@ import lombok.Data;
 public class RequestAutoOperation {
     @JsonProperty("expiration")
     private Integer expiration;
-    @JsonProperty("direction")
-    private String direction;
     @JsonProperty("active")
     private String active;
 }
