@@ -103,7 +103,7 @@ public class OperationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/config/{id}/starter")
+    @PostMapping("/config/{id}/starter")
     public ResponseEntity<Integer> startAutoOperation(@PathVariable String id, @RequestBody RequestAutoOperation requestAutoOperation) {
         Optional<ConfigOperation> configOperation = configOperationRepository.findById(id);
         if(configOperation.isPresent()) {

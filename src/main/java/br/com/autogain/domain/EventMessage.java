@@ -1,6 +1,8 @@
 package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.fabiomaffioletti.firebase.document.FirebaseDocument;
+import com.github.fabiomaffioletti.firebase.document.FirebaseId;
 import lombok.Data;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
@@ -10,9 +12,9 @@ import java.math.BigInteger;
 import java.util.Date;
 
 @Data
-@Document(collection = "event_messages")
+@FirebaseDocument("/event_messages")
 public class EventMessage {
-        @Id
+        @FirebaseId
         private String id;
         @JsonProperty("refund")
         private BigInteger refund;

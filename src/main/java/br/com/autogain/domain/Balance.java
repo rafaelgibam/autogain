@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.fabiomaffioletti.firebase.document.FirebaseDocument;
+import com.github.fabiomaffioletti.firebase.document.FirebaseId;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "balances")
+@FirebaseDocument("/balances")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "id", "user_id", "type", "amount", "enrolled_amount", "enrolled_sum_amount", "hold_amount",
@@ -17,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 		"is_marginal", "has_deposits" })
 public class Balance {
 
-	@Id
+	@FirebaseId
 	private String balanceId;
 
 	private Long id;

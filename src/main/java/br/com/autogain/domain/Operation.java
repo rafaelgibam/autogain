@@ -4,6 +4,8 @@ import br.com.autogain.config.CustomDateTimeDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.github.fabiomaffioletti.firebase.document.FirebaseDocument;
+import com.github.fabiomaffioletti.firebase.document.FirebaseId;
 import lombok.*;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
@@ -12,10 +14,10 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@Document(collection = "operations")
+@FirebaseDocument("/operations")
 public class Operation {
 
-    @Id
+    @FirebaseId
     private String id;
 
     @JsonIgnore
