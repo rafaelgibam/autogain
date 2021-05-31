@@ -17,9 +17,7 @@ import br.com.autogain.repository.SignalRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,8 +48,8 @@ public class IQOptionService implements EventListener {
 
     public String openOperation(IQOption iqOption, Signal signal) {
         // "M5;AUDCAD;00:30:00;PUT"
-        BigDecimal take = BigDecimal.ZERO;
-        BigDecimal stop = BigDecimal.ZERO;
+        Double take = 0d;
+        Double stop = 0d;
 
         List<Operation> operations
                 = signal.getOperations().stream().sorted(Comparator.comparing(Operation::getEntryTime))
@@ -85,10 +83,10 @@ public class IQOptionService implements EventListener {
                     EventMessage eventMessage = openOperation(iqOption, operation);
 
                     if(eventMessage.getResult().equals("win")){
-                          take = take.add(messageConverter.calculateProfit(eventMessage));
+                          take = take + messageConverter.calculateProfit(eventMessage);
                     }
                     if(eventMessage.getResult().equals("loose")){
-                          stop = stop.add(signal.getConfigOperation().getPrice());
+                          stop = stop + signal.getConfigOperation().getPrice();
                     }
                     break;
                 }
@@ -106,14 +104,14 @@ public class IQOptionService implements EventListener {
     }
 
     public void openAutoOperation(IQOption iqOption, Operation operation, EventMessage eventMessage) {
-        BigDecimal stop = BigDecimal.ZERO;
+        Double stop = 0d;
         EventMessage eventMessageRecursive = eventMessage;
 
         while (true) {
             if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("call")) {
                 operation.setDirection("PUT");
                 eventMessageRecursive = openOperation(iqOption, operation);
-                stop.add(messageConverter.calculateProfit(eventMessageRecursive));
+                stop = stop - messageConverter.calculateProfit(eventMessageRecursive);
             }
             if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("call")) {
                 operation.setDirection("CALL");
@@ -126,7 +124,7 @@ public class IQOptionService implements EventListener {
             if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("put")) {
                 operation.setDirection("CALL");
                 eventMessageRecursive = openOperation(iqOption, operation);
-                stop.add(messageConverter.calculateProfit(eventMessageRecursive));
+                stop = stop + messageConverter.calculateProfit(eventMessageRecursive);
             }
             if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("put")) {
                 operation.setDirection("PUT");

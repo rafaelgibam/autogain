@@ -1,61 +1,55 @@
 package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.fabiomaffioletti.firebase.document.FirebaseDocument;
-import com.github.fabiomaffioletti.firebase.document.FirebaseId;
+import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.Data;
 import org.joda.time.DateTime;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 @Data
-@FirebaseDocument("/event_messages")
 public class EventMessage {
-        @FirebaseId
+        @DocumentId
         private String id;
         @JsonProperty("refund")
-        private BigInteger refund;
+        private Integer refund;
         @JsonProperty("win")
         private String win; // equal
         @JsonProperty("index")
-        private BigInteger index; // 4646259912
+        private Integer index; // 4646259912
         @JsonProperty("value")
-        private BigDecimal value; // 1190650
+        private Double value; // 1190650
         @JsonProperty("amount")
-        private BigDecimal amount; // 10000000,
+        private Double amount; // 10000000,
         @JsonProperty("params")
-        private BigDecimal params;
+        private Double params;
         @JsonProperty("created")
         private Date created; // "2021-04-09T05:10:47+03:00",
         @JsonProperty("expired")
-        private BigInteger expired;
+        private Integer expired;
         @JsonProperty("exp_time")
-        private BigInteger expTime;
+        private Integer expTime;
         @JsonProperty("type_name")
         private String typeName;
         @JsonProperty("type")
         private String type;
         @JsonProperty("profit")
-        private BigDecimal profit;
+        private Double profit;
         @JsonProperty("profit_amount")
-        private BigDecimal profitAmount;
+        private Double profitAmount;
         @JsonProperty("win_amount")
-        private BigDecimal winAmount;
+        private Double winAmount;
         @JsonProperty("loose_amount")
-        private BigDecimal looseAmount;
+        private Double looseAmount;
         @JsonProperty("sum")
-        private BigInteger sum;
+        private Integer sum;
         @JsonProperty("now")
-        private BigDecimal now;
+        private Double now;
         @JsonProperty("is_demo")
         private boolean isDemo; // true
         @JsonProperty("user_id")
-        private BigInteger userId; // 96815802
+        private Integer userId; // 96815802
         @JsonProperty("refund_value")
-        private BigInteger refundValue;
+        private Integer refundValue;
         @JsonProperty("currency")
         private String currency; // USD
         @JsonProperty("currency_char")
@@ -69,51 +63,51 @@ public class EventMessage {
         @JsonProperty("direction")
         private String direction; // call
         @JsonProperty("exp_value")
-        private BigInteger expValue; // 1190650,
+        private Integer expValue; // 1190650,
         @JsonProperty("dir")
         private String dir;
         @JsonProperty("platform_id")
-        private BigInteger platformId; // 82
+        private Integer platformId; // 82
         @JsonProperty("actual_expire")
         private Date actualExpire; // 2021-04-09T05:12:00+03:00
         @JsonProperty("profit_income")
-        private BigDecimal profitIncome; // 160
+        private Double profitIncome; // 160
         @JsonProperty("profit_return")
-        private BigDecimal profitReturn; // 0
+        private Double profitReturn; // 0
         @JsonProperty("option_type_id")
         private int optionTypeId; // 3
         @JsonProperty("enrolled_amount")
-        private BigDecimal enrolledAmount; // 10000000
+        private Double enrolledAmount; // 10000000
         @JsonProperty("expected_expire")
         private Date expectedExpire; // 2021-04-09T05:12:00+03:00
         @JsonProperty("user_balance_id")
-        private BigInteger userBalanceId; // 478765880
+        private Integer userBalanceId; // 478765880
         @JsonProperty("new_wager_amount")
-        private BigDecimal newWagerAmount; // 0
+        private Double newWagerAmount; // 0
         @JsonProperty("user_balance_type")
         private int userBalanceType; // 4
         @JsonProperty("new_balance_amount")
-        private BigDecimal newBalanceAmount; // 10117990000,
+        private Double newBalanceAmount; // 10117990000,
         @JsonProperty("rollover_option_id")
-        private BigInteger rolloverOptionId; // null,
+        private Integer rolloverOptionId; // null,
         @JsonProperty("win_enrolled_amount")
-        private BigDecimal winEnrolledAmount; // 10000000,
+        private Double winEnrolledAmount; // 10000000,
         @JsonProperty("rollover_commission_amount")
-        private BigDecimal rolloverCommissionAmount; // null,
+        private Double rolloverCommissionAmount; // null,
         @JsonProperty("rollover_commission_operation_id")
-        private BigInteger rolloverCommissionOperationId; // null,
+        private Integer rolloverCommissionOperationId; // null,
         @JsonProperty("rollover_commission_enrolled_amount")
-        private BigDecimal rolloverCommissionEnrolledAmount; // null
+        private Double rolloverCommissionEnrolledAmount; // null
         @JsonProperty("game_state")
-        private BigInteger gameState;
+        private Integer gameState;
         @JsonProperty("site_id")
-        private BigInteger siteId;
+        private Integer siteId;
         @JsonProperty("client_platform_id")
-        private BigInteger clientPlatformId;
+        private Integer clientPlatformId;
         @JsonProperty("price")
-        private BigDecimal price;
+        private Double price;
         @JsonProperty("exp")
-        private BigInteger exp;
+        private Integer exp;
         @JsonProperty("message")
         private Message message;
         @JsonProperty("created_millisecond")
@@ -121,33 +115,33 @@ public class EventMessage {
         @JsonProperty("time_rate")
         private DateTime timeRate;
         @JsonProperty("act")
-        private BigInteger act;
+        private Integer act;
         @JsonProperty("reason")
         private String reason;
         @JsonProperty("open_time")
-        private BigInteger openTime;
+        private Integer openTime;
         @JsonProperty("robot_id")
-        private BigInteger robotId;
+        private Integer robotId;
         @JsonProperty("request_id")
-        private BigInteger requestId;
+        private Integer requestId;
         @JsonProperty("aff_id")
-        private BigInteger affId;
+        private Integer affId;
         @JsonProperty("result")
         private String result;
         @JsonProperty("balance")
-        private BigDecimal balance;
+        private Double balance;
         @JsonProperty("option_id")
-        private BigInteger optionId;
+        private Integer optionId;
         @JsonProperty("aff_track")
         private String affTrack;
         @JsonProperty("balance_id")
-        private BigInteger balanceId;
+        private Integer balanceId;
         @JsonProperty("bonus_rate")
-        private BigInteger bonusRate;
+        private Integer bonusRate;
         @JsonProperty("country_id")
-        private BigInteger countryId;
+        private Integer countryId;
         @JsonProperty("inout_diff")
-        private BigInteger inoutDiff;
+        private Integer inoutDiff;
         @JsonProperty("option_type")
         private String optionType;
         @JsonProperty("is_can_trade")
@@ -157,23 +151,23 @@ public class EventMessage {
         @JsonProperty("tournament_id")
         private String tournamentId;
         @JsonProperty("user_group_id")
-        private BigInteger userGroupId;
+        private Integer userGroupId;
         @JsonProperty("expiration_time")
         private String expirationTime;
         @JsonProperty("balance_type_id")
-        private BigInteger balanceTypeId;
+        private Integer balanceTypeId;
         @JsonProperty("profit_percent")
-        private BigInteger profitPercent;
+        private Integer profitPercent;
         @JsonProperty("open_time_millisecond")
         private Date openTimeMillisecond;
         @JsonProperty("is_rolled_over")
         private Boolean isRolledOver;
         @JsonProperty("expiration_value")
-        private BigDecimal expirationValue;
+        private Double expirationValue;
         @JsonProperty("current_balance")
         private Balance currentBalance;
         @JsonProperty("rollover_initial_commission_amount")
-        private BigDecimal rolloverInitialCommissionAmount;
+        private Double rolloverInitialCommissionAmount;
         @JsonProperty("rate_finished")
         private Boolean rateFinished;
 }

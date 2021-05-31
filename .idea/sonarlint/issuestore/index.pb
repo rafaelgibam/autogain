@@ -21,8 +21,6 @@ Rsrc/main/java/br/com/autogain/consumer/iqoption/ws/response/OperationResponse.j
 Psrc/main/java/br/com/autogain/consumer/iqoption/ws/response/ProfileResponse.java,5/4/5427dee5b9b254abbc2c3be2469ad1dae13ec486
 |
 Lsrc/main/java/br/com/autogain/consumer/iqoption/factory/ResponseFactory.java,9/d/9defe6028ffc8d064e56f3240f1ffc7860130368
-o
-?src/main/java/br/com/autogain/converter/OperationConverter.java,9/4/94b282ad576808209d8de7fe6ab3febe145278bc
 x
 Hsrc/main/java/br/com/autogain/consumer/iqoption/ws/response/Balance.java,8/4/84e0aad82eed2ac209c2707625357224e733f756
 ‚
@@ -73,5 +71,3 @@ q
 Asrc/main/java/br/com/autogain/service/ConfigOperationService.java,d/a/da6fb71556a6da8eea56479389a68a2e23a03aee
 h
 8src/main/java/br/com/autogain/service/SignalService.java,8/6/86cb12a17a928e2b92a98dcd224713b42a217cda
-j
-:src/main/java/br/com/autogain/service/IQOptionService.java,8/c/8cda47a4ebee747c7f04cf9b25be6735a589e448

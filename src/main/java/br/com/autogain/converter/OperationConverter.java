@@ -40,7 +40,7 @@ public class OperationConverter {
                 .expiration(operationDTO.getExpiration())
                 .active(operationDTO.getActive())
                 .direction(operationDTO.getDirection())
-                .price(new BigDecimal(10))
+                .price(10d)
                 .build();
         return operation;
     }

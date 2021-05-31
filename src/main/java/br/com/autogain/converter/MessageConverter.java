@@ -59,17 +59,17 @@ public class MessageConverter {
         return message.getMsg();
     }
 
-    public BigDecimal calculateProfit(EventMessage eventMessage) {
+    public Double calculateProfit(EventMessage eventMessage) {
         if(eventMessage.getWinEnrolledAmount() != null && eventMessage.getEnrolledAmount() != null) {
-            return eventMessage.getWinEnrolledAmount().subtract(eventMessage.getEnrolledAmount());
+            return eventMessage.getWinEnrolledAmount() - eventMessage.getEnrolledAmount();
         }
         if(eventMessage.getProfitAmount() != null && eventMessage.getAmount() != null) {
-            return eventMessage.getProfitAmount().subtract(eventMessage.getAmount());
+            return eventMessage.getProfitAmount() - eventMessage.getAmount();
         }
         if(eventMessage.getWinAmount() != null && eventMessage.getAmount() != null) {
-            return eventMessage.getWinAmount().subtract(eventMessage.getAmount());
+            return eventMessage.getWinAmount() - eventMessage.getAmount();
         }
-        return BigDecimal.ZERO;
+        return 0d;
     }
 
     public String calculateProfitMessage(Message message, EventMessage eventMessage) {

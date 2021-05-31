@@ -4,23 +4,19 @@ import br.com.autogain.config.CustomDateTimeDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.github.fabiomaffioletti.firebase.document.FirebaseDocument;
-import com.github.fabiomaffioletti.firebase.document.FirebaseId;
+import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.*;
 import org.joda.time.DateTime;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import java.math.BigDecimal;
 
 @Data
 @Builder
-@FirebaseDocument("/operations")
 public class Operation {
 
-    @FirebaseId
+    @DocumentId
     private String id;
 
     @JsonIgnore
+    @JsonProperty("signal_id")
     private String signalId;
 
     @JsonProperty("expiration")
@@ -33,9 +29,7 @@ public class Operation {
     private String active;
 
     @JsonIgnore
-    private BigDecimal price;
-
-
+    private Double price;
 
     @JsonProperty("entry_time")
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
@@ -43,6 +37,5 @@ public class Operation {
 
     @JsonProperty("status")
     private Boolean status;
-
 
 }

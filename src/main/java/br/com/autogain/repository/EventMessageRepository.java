@@ -1,17 +1,22 @@
 package br.com.autogain.repository;
 
 import br.com.autogain.domain.EventMessage;
-import com.github.fabiomaffioletti.firebase.repository.DefaultFirebaseRealtimeDatabaseRepository;
-import com.github.fabiomaffioletti.firebase.repository.Filter;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
-
 import java.math.BigInteger;
 
 @Repository
-public class EventMessageRepository extends BaseRepository<EventMessage, String> {
-    public boolean existsByIndex(BigInteger index) {
-        Filter filter = Filter.FilterBuilder.builder().equalTo(index).build();
-        return !find(filter).isEmpty() ? true : false;
+public class EventMessageRepository extends BaseRepository<EventMessage> {
+
+    public EventMessageRepository(Firestore firestore) {
+        super(firestore, "event_messages");
+    }
+
+    @SneakyThrows
+    public boolean existsByIndex(Integer index) {
+        Query query = getCollectionReference().whereEqualTo("index", index);
+        return !query.get().get().isEmpty() ? true : false;
     };
 }

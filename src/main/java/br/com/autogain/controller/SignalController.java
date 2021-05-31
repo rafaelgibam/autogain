@@ -68,15 +68,8 @@ public class SignalController {
 
         Optional<Signal> osignal = signalRepository.findById(id);
 
-        if(osignal.isPresent()) {
-
-            List<Operation> operationsMap = operations.stream().map(operation -> {
-                operation.setSignalId(id);
-                return operation;
-            }).collect(Collectors.toList());
-
-            operationRepository.saveAll(operationsMap);
-            osignal.get().setOperations(operationRepository.findBySignalId(id));
+        if(osignal.isPresent() || !operations.isEmpty()) {
+            osignal.get().setOperations(operations);
             signalRepository.save(osignal.get());
             return ResponseEntity.ok(osignal.get());
         }
@@ -94,8 +87,7 @@ public class SignalController {
         signalRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-
+    
     @PostMapping("/{id}/configs")
     public ResponseEntity<Signal> signalsConfig(@PathVariable String id, @RequestBody ConfigOperation configOperation){
 
