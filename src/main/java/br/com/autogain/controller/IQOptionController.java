@@ -3,15 +3,15 @@ package br.com.autogain.controller;
 
 import br.com.autogain.consumer.iqoption.IQOption;
 import br.com.autogain.converter.OperationConverter;
-import br.com.autogain.domain.EventMessage;
-import br.com.autogain.domain.Operation;
-import br.com.autogain.domain.Signal;
-import br.com.autogain.domain.User;
+import br.com.autogain.domain.*;
+import br.com.autogain.dto.RequestAutoOperation;
+import br.com.autogain.repository.ConfigOperationRepository;
 import br.com.autogain.repository.OperationRepository;
 import br.com.autogain.repository.SignalRepository;
 import br.com.autogain.service.IQOptionService;
 import br.com.autogain.service.OperationService;
 import br.com.autogain.service.SignalService;
+import br.com.autogain.service.StrategyMarketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +36,11 @@ public class IQOptionController {
     private OperationConverter operationConverter;
     @Autowired
     private OperationRepository operationRepository;
+    @Autowired
+    private ConfigOperationRepository configOperationRepository;
+    @Autowired
+    private StrategyMarketService strategyMarketService;
+
 
     @PostMapping("/connects")
     public ResponseEntity<String> connect(
@@ -81,12 +86,13 @@ public class IQOptionController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/autos")
-    public ResponseEntity<String> autoOperation(
-            @RequestBody Operation operation
-    ) {
-        iqOptionService.openOperation(iqOption, operation);
-        return ResponseEntity.ok("");
+    @PostMapping("/configurations/{id}/starter")
+    public ResponseEntity<Integer> startAutoOperation(@PathVariable String id, @RequestBody RequestAutoOperation requestAutoOperation) {
+        Optional<ConfigOperation> configOperation = configOperationRepository.findById(id);
+        if(configOperation.isPresent()) {
+            return ResponseEntity.ok(strategyMarketService.getCandleBackTrend(requestAutoOperation, configOperation.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

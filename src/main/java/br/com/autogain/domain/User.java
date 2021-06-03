@@ -1,8 +1,11 @@
 package br.com.autogain.domain;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
     private String id;
     private String email;

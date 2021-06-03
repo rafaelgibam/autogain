@@ -2,10 +2,14 @@ package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.cloud.firestore.annotation.DocumentId;
-import lombok.Data;
+import lombok.*;
+
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Signal {
     @DocumentId
     private String id;

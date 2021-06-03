@@ -3,9 +3,12 @@ package br.com.autogain.domain;
 import br.com.autogain.enums.ManagementOperation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.cloud.firestore.annotation.DocumentId;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class ConfigOperation {
     @DocumentId
     private String id;

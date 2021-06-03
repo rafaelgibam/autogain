@@ -15,7 +15,7 @@ public class EventMessageRepository extends BaseRepository<EventMessage> {
     }
 
     @SneakyThrows
-    public boolean existsByIndex(Integer index) {
+    public boolean existsByIndex(Long index) {
         Query query = getCollectionReference().whereEqualTo("index", index);
         return !query.get().get().isEmpty() ? true : false;
     };

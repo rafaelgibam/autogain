@@ -32,27 +32,22 @@ public class SignalController {
 
     @GetMapping
     public ResponseEntity<List<Signal>> listSignals(){
-
-       List<Signal> signalList = signalRepository.findAll();
-
-      return ResponseEntity.ok(signalList);
+        List<Signal> signalList = signalRepository.findAll();
+        return ResponseEntity.ok(signalList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Signal>> listIdSignals(@PathVariable String id){
-
         Optional<Signal> listSignals = signalRepository.findById(id);
-
-     return ResponseEntity.ok(listSignals);
+        return ResponseEntity.ok(listSignals);
     }
 
     @PostMapping
     public ResponseEntity<Signal> saveSignal(@RequestBody Signal signal){
-
         Signal signals = signalRepository.save(signal);
-
         return ResponseEntity.ok(signals);
     }
+
     @GetMapping("/{id}/operations")
     public ResponseEntity<List<Operation>> signalsOperationsList(@PathVariable String id){
 

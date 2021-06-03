@@ -1,11 +1,16 @@
 package br.com.autogain.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import com.google.cloud.firestore.annotation.DocumentId;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Message {
 
+	@DocumentId
 	private String id;
 
 	@JsonProperty("name")

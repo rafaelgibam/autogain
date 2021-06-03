@@ -4,31 +4,31 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
+import lombok.SneakyThrows;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class CustomDateTimeDeserializer extends StdDeserializer<DateTime> {
+public class CustomDateTimeDeserializer extends StdDeserializer<Date> {
     private static final long serialVersionUID = 1L;
-    private static DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-mm-dd HH:mm:ss");
+    private static SimpleDateFormat simpleDateFormat;
 
     public CustomDateTimeDeserializer() {
         this(null);
     }
 
-    public CustomDateTimeDeserializer(Class<DateTime> t) {
+    public CustomDateTimeDeserializer(Class<Date> t) {
         super(t);
     }
 
     @Override
-    public DateTime deserialize(JsonParser parser, DeserializationContext context)
+    @SneakyThrows
+    public Date deserialize(JsonParser parser, DeserializationContext context)
             throws IOException, JsonProcessingException {
-
+        simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
         String date = parser.getText();
 
-        return format.parseDateTime(date);
+        return simpleDateFormat.parse(date);
 
     }
 }

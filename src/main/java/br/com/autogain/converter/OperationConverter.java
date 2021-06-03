@@ -29,7 +29,7 @@ public class OperationConverter {
        Operation operation =  Operation.builder()
                                         .expiration(TimeFrame.valueOf(operationValues[0]).getId())
                                         .active(operationValues[1])
-                                        .entryTime(new DateTime(dateTime))
+                                        .entryTime(dateTime)
                                         .direction(operationValues[3])
                                         .build();
        return operation;

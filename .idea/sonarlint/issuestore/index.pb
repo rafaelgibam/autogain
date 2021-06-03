@@ -65,8 +65,6 @@ U.idea/libraries/Maven__org_springframework_data_spring_data_mongodb_3_0_4_RELEA
 Ksrc/main/java/br/com/autogain/consumer/iqoption/IQOptionMessageHandler.java,e/c/ec90912df20faa3a0698dc9cebb18a5ec5f6bfd8
 y
 Isrc/test/java/br/com/autogain/service/ManagementOperationServiceTest.java,b/1/b1d3952dbd8b1a60fba6569eea9d32a27d6404f8
-u
-Esrc/main/java/br/com/autogain/service/ManagementOperationService.java,c/6/c6da484f0ad7c370b6b1553dbbf1e631edc67634
 q
 Asrc/main/java/br/com/autogain/service/ConfigOperationService.java,d/a/da6fb71556a6da8eea56479389a68a2e23a03aee
 h

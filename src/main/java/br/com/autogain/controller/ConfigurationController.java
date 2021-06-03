@@ -21,13 +21,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/operations")
-public class OperationController {
+@RequestMapping("/configurations")
+public class ConfigurationController {
 
     @Autowired
     private IQOption iqOption;
-    @Autowired
-    private OperationRepository operationRepository;
     @Autowired
     private ConfigOperationRepository configOperationRepository;
     @Autowired
@@ -36,38 +34,6 @@ public class OperationController {
     private StrategyMarketService strategyMarketService;
 
     @GetMapping
-    public ResponseEntity<List<Operation>> findAll() {
-        return ResponseEntity.ok(operationRepository.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Operation> find(@PathVariable String id) {
-        Optional<Operation> ooperation = operationRepository.findById(id);
-        if(ooperation.isPresent()) {
-            return ResponseEntity.ok(ooperation.get());
-        }
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping
-    public ResponseEntity<Operation> saveOperation(@RequestBody Operation operation){
-        Operation operations = operationRepository.save(operation);
-        return  ResponseEntity.ok(operations);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Operation> updateOperations(@RequestBody Operation operation, @PathVariable String id){
-        operation.setId(id);
-        return ResponseEntity.ok(operationRepository.save(operation));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Operation> deleteOPeration(@PathVariable String id){
-        operationRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/configs")
     public ResponseEntity<List<ConfigOperation>> getConfigurations() {
         Optional<List<ConfigOperation>> oConfigOperations = Optional.of(configOperationRepository.findAll());
         if(oConfigOperations.isPresent()) {
@@ -76,42 +42,29 @@ public class OperationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/configs/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<ConfigOperation>> getIdConfigurations(@PathVariable String id){
-
         Optional<ConfigOperation> idConfigOperations = configOperationRepository.findById(id);
-
         return ResponseEntity.ok(idConfigOperations);
-        }
+    }
 
 
-    @PostMapping("/configs")
+    @PostMapping
     public ResponseEntity<ConfigOperation> saveConfiguration(@RequestBody ConfigOperation configOperation) {
         return ResponseEntity.ok(configOperationRepository.save(configOperation));
     }
 
-    @PutMapping("/configs/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ConfigOperation> updateConfiguration(@PathVariable String id, @RequestBody ConfigOperation configOperation) {
         configOperation.setId(id);
         configOperationRepository.save(configOperation);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/configs/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ConfigOperation> deleteConfiguration(@PathVariable String id) {
         configOperationRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PostMapping("/config/{id}/starter")
-    public ResponseEntity<Integer> startAutoOperation(@PathVariable String id, @RequestBody RequestAutoOperation requestAutoOperation) {
-        Optional<ConfigOperation> configOperation = configOperationRepository.findById(id);
-        if(configOperation.isPresent()) {
-            return ResponseEntity.ok(strategyMarketService.getCandleBackTrend(requestAutoOperation, configOperation.get()));
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-
 
 }

@@ -58,8 +58,9 @@ public class IQOptionService implements EventListener {
 
         if(!operations.isEmpty()){
 
-         for(Operation operation : operations){
-            DateTime entryTimeWithDelay = operation.getEntryTime().minusSeconds(3);
+         for(int index = 0; index < operations.size(); index++){
+            Operation operation = operations.get(index);
+            DateTime entryTimeWithDelay = new DateTime(operation.getEntryTime()).minusSeconds(3);
             String entryTimeWithDelayFormat = entryTimeWithDelay.toString("HH:mm:ss");
 
             if(take.doubleValue() >= signal.getConfigOperation().getTake().doubleValue()){
@@ -79,7 +80,7 @@ public class IQOptionService implements EventListener {
                     log.info("[API] - Opening operation active: ".concat(operation.getActive())
                             .concat(" - Timeframe: ").concat(TimeFrame.get(operation.getExpiration()).toString()));
 
-                    updateOperations(operation, signal);
+                    updateOperations(index, operation, signal);
                     EventMessage eventMessage = openOperation(iqOption, operation);
 
                     if(eventMessage.getResult().equals("win")){
@@ -144,63 +145,12 @@ public class IQOptionService implements EventListener {
         }
     }
 
-
-//    public void openAutoOperation(IQOption iqOption, Operation operation, EventMessage eventMessage) {
-//        BigDecimal stop = BigDecimal.ZERO;
-//        EventMessage eventMessageRecursive = eventMessage;
-//
-//        while (true) {
-//            eventMessageRecursive = openOperation(iqOption, operation);
-//            if(iqOption.verifyResult(eventMessageRecursive)) {
-//
-//            }
-//            stop.add(messageConverter.calculateProfit(eventMessageRecursive));
-//            break;
-//        }
-//
-//        if(!stop.equals(20)) {
-//            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("call")) {
-//                operation.setDirection("PUT");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("call")) {
-//                operation.setDirection("CALL");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("call")) {
-//                operation.setDirection("CALL");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("loose") && eventMessageRecursive.getDirection().equals("put")) {
-//                operation.setDirection("CALL");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("win") && eventMessageRecursive.getDirection().equals("put")) {
-//                operation.setDirection("PUT");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//            if(eventMessageRecursive.getResult().equals("equal") && eventMessageRecursive.getDirection().equals("put")) {
-//                operation.setDirection("PUT");
-//                openAutoOperation(iqOption, operation, eventMessageRecursive);
-//            }
-//        }
-//    }
-
-    private void updateOperations(Operation operation, Signal signal){
-
+    private void updateOperations(int index, Operation operation, Signal signal){
         operation.setStatus(true);
-        operationRepository.save(operation);
-
-        List<Operation> listOperations =  signal.getOperations().stream().map(operation1 -> {
-            if(operation1.getId().equals(operation.getId())){
-                operation1.setStatus(true);
-                return operation1;
-            }
-            return operation1;
-        }).collect(Collectors.toList());
-        signal.setOperations(listOperations);
-        signalRepository.save(signal);
+        signal.getOperations().remove(index);
+        signal.getOperations().add(operation);
         operation.setPrice(signal.getConfigOperation().getPrice());
+        signalRepository.save(signal);
     }
 
     @Override

@@ -4,20 +4,15 @@ import br.com.autogain.config.CustomDateTimeDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.*;
-import org.joda.time.DateTime;
+import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Operation {
-
-    @DocumentId
-    private String id;
-
-    @JsonIgnore
-    @JsonProperty("signal_id")
-    private String signalId;
 
     @JsonProperty("expiration")
     private int expiration;
@@ -33,7 +28,7 @@ public class Operation {
 
     @JsonProperty("entry_time")
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    private DateTime entryTime;
+    private Date entryTime;
 
     @JsonProperty("status")
     private Boolean status;
